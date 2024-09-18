@@ -1,0 +1,87 @@
+import React, { useEffect, useState } from "react";
+import Container from "../ui/Container";
+import TextTitle from "../ui/TextTitle";
+import Text from "../ui/Text";
+import { IconAlertCircle, IconCircleX, IconX } from "@tabler/icons-react";
+
+interface INotifikasi extends React.HTMLAttributes<HTMLDivElement> {
+  isShow: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  closeable?: boolean;
+  title: string;
+  message: string;
+  status: "caution" | "alert";
+  triggerShake?: boolean;
+}
+
+export default function Notifikasi({
+  isShow = true,
+  setShow,
+  closeable = false,
+  title,
+  message,
+  status,
+  triggerShake,
+  ...props
+}: INotifikasi) {
+  const [isShaking, setIsShaking] = useState<boolean>(false);
+
+  const statusIcon = (status: "caution" | "alert") => {
+    switch (status) {
+      case "caution":
+        return (
+          <IconAlertCircle size={24} color="#F79008" className="shrink-0" />
+        );
+      case "alert":
+        return <IconCircleX size={24} color="#AF2A2D" className="shrink-0" />;
+    }
+  };
+
+  const styleContainer = (status: "caution" | "alert") => {
+    switch (status) {
+      case "caution":
+        return "!border-[#FEDF88] !bg-[#FFFCF5]";
+      case "alert":
+        return "!border-[#DBB7B7] !bg-[#F8F2F2]";
+    }
+  };
+
+  useEffect(() => {
+    if (isShow) {
+      setIsShaking(true);
+      const timer = setTimeout(() => {
+        setIsShaking(false);
+      }, 250);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isShow, triggerShake]);
+
+  return (
+    isShow && (
+      <Container
+        id="notifikasi"
+        className={`${isShaking ? "gentle-shake" : ""} !p-4 ${styleContainer(status)}`}
+        {...props}
+      >
+        <div className="flex gap-3">
+          {statusIcon(status)}
+          <div className="flex">
+            <div className="flex w-full flex-col gap-1">
+              <TextTitle className="text-sm">{title}</TextTitle>
+              <Text className="text-xs leading-[18px]">{message}</Text>
+            </div>
+            {closeable && (
+              <IconX
+                onClick={() => setShow(false)}
+                size={12}
+                color="#182230"
+                className="shrink-0"
+              />
+            )}
+          </div>
+        </div>
+      </Container>
+    )
+  );
+}
