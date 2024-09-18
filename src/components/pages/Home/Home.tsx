@@ -1,10 +1,11 @@
-import CardInfo from "@/components/commons/CardInfo";
 import Notifikasi from "@/components/commons/Notifikasi";
 import React, { useState } from "react";
 import CekPenerimaProgram from "./CekPenerimaProgram";
+import Accordion from "@/components/commons/Accordion";
+import { faqData } from "@/constants/faq";
 
 export default function Home() {
-  const [showNotification, setShowNotification] = useState<boolean>(false);
+  const [showNotification, setShowNotification] = useState<boolean>(true);
   const [shakeTrigger, setShakeTrigger] = useState<boolean>(false);
 
   return (
@@ -13,9 +14,8 @@ export default function Home() {
         data-testid="notifikasi"
         isShow={showNotification}
         setShow={setShowNotification}
-        title="NIK dan NISN Tidak Cocok"
-        message="Data tidak ditemukan atau tidak terdaftar sebagai penerima PIP."
-        status="alert"
+        message="Anda hanya dapat melakukan pengecekan kendaraan berplat nomor kuning."
+        status="info"
         triggerShake={shakeTrigger}
       />
 
@@ -24,26 +24,7 @@ export default function Home() {
         setShakeTrigger={setShakeTrigger}
       />
 
-      <CardInfo
-        img="/img/target.png"
-        title="Tujuan Program"
-        desc="Lihat tujuan dari layanan pendidikan Program Indonesia Pintar."
-        link="/tujuan-program"
-      />
-
-      <CardInfo
-        img="/img/category.png"
-        title="Kategori Penerima Program"
-        desc="Ketahui syarat dan ketentuan penerima Program Indonesia Pintar."
-        link="/kategori-penerima-program"
-      />
-
-      <CardInfo
-        img="/img/faq.png"
-        title="FAQ (Frequently Ask Question)"
-        desc="Daftar pertanyaan terkait Program Indonesia Pintar."
-        link="/faq-pip"
-      />
+      <Accordion accordionData={faqData} />
     </>
   );
 }

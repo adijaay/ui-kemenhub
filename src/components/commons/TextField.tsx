@@ -5,19 +5,19 @@ import Text from "../ui/Text";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 
 interface ITextFieldBase extends IInputBase {
-  label: string;
+  label?: string;
   errorDesc?: string;
 }
 
 interface ITextFieldWithError extends IInputWithError {
-  label: string;
+  label?: string;
   errorDesc: string;
 }
 
 type ITextField = ITextFieldBase | ITextFieldWithError;
 
 export default function TextField({
-  label,
+  label = "",
   type = "text",
   placeholder,
   value,
@@ -29,7 +29,7 @@ export default function TextField({
 }: ITextField) {
   return (
     <div className="flex flex-col gap-2">
-      <InputLabel text={`${label}`} />
+      {label ? <InputLabel text={`${label}`} /> : undefined}
       <Input
         value={value}
         onClear={onClear}

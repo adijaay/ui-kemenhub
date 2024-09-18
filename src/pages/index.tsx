@@ -8,16 +8,16 @@ export default function HomePage() {
   useEffect(() => {
     sendFirebase({
       id_list_product: 829001,
-      list_product_name: "program-indonesia-pintar",
+      list_product_name: "cek-kelaikan-kendaraan",
     });
   }, []);
 
   return (
-    <Page homePage pageTitle="Program Indonesia Pintar">
+    <Page homePage pageTitle="Cek Kelaikan Kendaraan">
       <Head>
-        <title>Program Indonesia Pintar</title>
+        <title>Cek Kelaikan Kendaraan</title>
       </Head>
-      
+
       <Home />
     </Page>
   );

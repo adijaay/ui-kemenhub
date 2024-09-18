@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import Container from "../ui/Container";
 import TextTitle from "../ui/TextTitle";
 import Text from "../ui/Text";
-import { IconAlertCircle, IconCircleX, IconX } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconCircleX,
+  IconInfoCircle,
+  IconX,
+} from "@tabler/icons-react";
 
 interface INotifikasi extends React.HTMLAttributes<HTMLDivElement> {
   isShow: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   closeable?: boolean;
-  title: string;
+  title?: string;
   message: string;
-  status: "caution" | "alert";
+  status: "caution" | "alert" | "info";
   triggerShake?: boolean;
 }
 
@@ -18,7 +23,7 @@ export default function Notifikasi({
   isShow = true,
   setShow,
   closeable = false,
-  title,
+  title = "",
   message,
   status,
   triggerShake,
@@ -26,7 +31,7 @@ export default function Notifikasi({
 }: INotifikasi) {
   const [isShaking, setIsShaking] = useState<boolean>(false);
 
-  const statusIcon = (status: "caution" | "alert") => {
+  const statusIcon = (status: "caution" | "alert" | "info") => {
     switch (status) {
       case "caution":
         return (
@@ -34,15 +39,21 @@ export default function Notifikasi({
         );
       case "alert":
         return <IconCircleX size={24} color="#AF2A2D" className="shrink-0" />;
+      case "info":
+        return (
+          <IconInfoCircle size={24} color="#2871FF" className="shrink-0" />
+        );
     }
   };
 
-  const styleContainer = (status: "caution" | "alert") => {
+  const styleContainer = (status: "caution" | "alert" | "info") => {
     switch (status) {
       case "caution":
         return "!border-[#FEDF88] !bg-[#FFFCF5]";
       case "alert":
         return "!border-[#DBB7B7] !bg-[#F8F2F2]";
+      case "info":
+        return "!border-[#B2CCFF] !bg-[#F6F8FF]";
     }
   };
 
@@ -68,7 +79,7 @@ export default function Notifikasi({
           {statusIcon(status)}
           <div className="flex">
             <div className="flex w-full flex-col gap-1">
-              <TextTitle className="text-sm">{title}</TextTitle>
+              {title && <TextTitle className="text-sm">{title}</TextTitle>}
               <Text className="text-xs leading-[18px]">{message}</Text>
             </div>
             {closeable && (

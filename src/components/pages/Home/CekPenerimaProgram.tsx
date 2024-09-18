@@ -3,7 +3,7 @@ import TextField from "@/components/commons/TextField";
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import TextTitle from "@/components/ui/TextTitle";
-import { validateNik, validateNisn } from "@/utils/validation";
+import { validateCity, validateCode, validateNumber } from "@/utils/validation";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { TResponseData } from "../DataPenerima/DataPenerima";
@@ -20,13 +20,19 @@ export default function CekPenerimaProgram({
 }: ICekPenerimaProgram) {
   const router = useRouter();
 
-  const [nisn, setNisn] = useState({
+  const [vehicleCity, setVehicleCity] = useState({
     data: "",
     error: false,
     errorDesc: "",
   });
 
-  const [nik, setNik] = useState({
+  const [vehicleNumber, setVehicleNumber] = useState({
+    data: "",
+    error: false,
+    errorDesc: "",
+  });
+
+  const [vehicleCode, setVehicleCode] = useState({
     data: "",
     error: false,
     errorDesc: "",
@@ -34,35 +40,59 @@ export default function CekPenerimaProgram({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChangeNisn = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
-      setNisn({ ...nisn, data: e.target.value });
+    if (/^[a-zA-Z]*$/.test(inputValue) && inputValue.length <= 2) {
+      setVehicleCity({ ...vehicleCity, data: e.target.value });
+    }
+  };
+  const handleChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    if (/^[a-zA-Z0-9]*$/.test(inputValue) && inputValue.length <= 4) {
+      setVehicleNumber({ ...vehicleNumber, data: e.target.value });
     }
   };
 
-  const handleChangeNik = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeCode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    if (/^\d*$/.test(inputValue) && inputValue.length <= 16) {
-      setNik({ ...nik, data: e.target.value });
+    if (/^[a-zA-Z]*$/.test(inputValue) && inputValue.length <= 3) {
+      setVehicleCode({ ...vehicleCode, data: e.target.value });
     }
   };
 
   const submitHandler = async () => {
-    const nisnError = validateNisn(nisn.data);
-    const nikError = validateNik(nik.data);
+    const vehicleCityError = validateCity(vehicleCity.data);
+    const vehicleNumberError = validateNumber(vehicleNumber.data);
+    const vehicleCodeError = validateCode(vehicleCode.data);
 
-    if (nisnError || nikError) {
-      if (nisnError) {
-        setNisn({ ...nisn, error: true, errorDesc: nisnError });
+    if (vehicleCityError || vehicleNumberError || vehicleCodeError) {
+      if (vehicleCityError) {
+        setVehicleCity({
+          ...vehicleCity,
+          error: true,
+          errorDesc: vehicleCityError,
+        });
       } else {
-        setNisn({ ...nisn, error: false, errorDesc: "" });
+        setVehicleCity({ ...vehicleCity, error: false, errorDesc: "" });
+      }
+      if (vehicleNumberError) {
+        setVehicleNumber({
+          ...vehicleNumber,
+          error: true,
+          errorDesc: vehicleNumberError,
+        });
+      } else {
+        setVehicleNumber({ ...vehicleNumber, error: false, errorDesc: "" });
       }
 
-      if (nikError) {
-        setNik({ ...nik, error: true, errorDesc: nikError });
+      if (vehicleCodeError) {
+        setVehicleCode({
+          ...vehicleCode,
+          error: true,
+          errorDesc: vehicleCodeError,
+        });
       } else {
-        setNik({ ...nik, error: false, errorDesc: "" });
+        setVehicleCode({ ...vehicleCode, error: false, errorDesc: "" });
       }
 
       if (!navigator.onLine) {
@@ -72,7 +102,7 @@ export default function CekPenerimaProgram({
       setIsSubmitting(true);
       try {
         const response = await fetch(
-          `${process.env.BASE_API_URL}/api/v1/data-penerima?nik=${nik.data}&nisn=${nisn.data}`,
+          `${process.env.BASE_API_URL}/api/v1/data-penerima?area=${vehicleCode.data}&code=${vehicleCity.data}&number=${vehicleNumber.data}`,
         );
 
         if (response.status === 408) {
@@ -85,7 +115,11 @@ export default function CekPenerimaProgram({
         if (responseJson.success) {
           router.push({
             pathname: "/data-penerima-program",
-            query: { nisn: nisn.data, nik: nik.data },
+            query: {
+              vehicleCity: vehicleCity.data,
+              vehicleNumber: vehicleNumber.data,
+              vehicleCode: vehicleCode.data,
+            },
           });
         } else {
           setShowNotification(true);
@@ -105,51 +139,65 @@ export default function CekPenerimaProgram({
   };
 
   useEffect(() => {
-    setNisn({ ...nisn, error: false, errorDesc: "" });
-  }, [nisn.data]);
-
-  useEffect(() => {
-    setNik({ ...nik, error: false, errorDesc: "" });
-  }, [nik.data]);
+    setVehicleCity({ ...vehicleCity, error: false, errorDesc: "" });
+    setVehicleCode({ ...vehicleCode, error: false, errorDesc: "" });
+    setVehicleNumber({ ...vehicleNumber, error: false, errorDesc: "" });
+  }, [vehicleCity.data, vehicleCode.data, vehicleNumber.data]);
 
   return (
     <Container>
-      <TextTitle className="text-base">Cek Penerima Program</TextTitle>
-      <TextField
-        id="nisn"
-        data-testid="nisn"
-        label="Nomor Induk Siswa Nasional (NISN)"
-        placeholder="Contoh: 112377281"
-        type="text"
-        inputMode="numeric"
-        pattern="\d*"
-        value={nisn.data}
-        onClear={() => setNisn({ ...nisn, data: "" })}
-        onChange={handleChangeNisn}
-        error={nisn.error}
-        errorDesc={nisn.errorDesc}
-        clearable
-      />
+      <TextTitle className="text-base">Plat Nomor Kendaraan</TextTitle>
+      <div className="flex w-full items-center justify-start gap-2">
+        <div className="w-full max-w-[64px]">
+          <TextField
+            id="vehicleCity"
+            data-testid="vehicleCity"
+            placeholder="XX"
+            type="text"
+            inputMode="text"
+            value={vehicleCity.data}
+            onClear={() => setVehicleCity({ ...vehicleCity, data: "" })}
+            onChange={handleChangeCity}
+            error={vehicleCity.error}
+            errorDesc={vehicleCity.errorDesc}
+          />
+        </div>
 
-      <TextField
-        id="nik"
-        data-testid="nik"
-        label="Nomor Induk Kependudukan (NIK)"
-        placeholder="Contoh: 3530009712399000"
-        type="text"
-        inputMode="numeric"
-        pattern="\d*"
-        value={nik.data}
-        onClear={() => setNik({ ...nik, data: "" })}
-        onChange={handleChangeNik}
-        error={nik.error}
-        errorDesc={nik.errorDesc}
-        clearable
-      />
+        <div className="w-full">
+          <TextField
+            id="vehicleNumber"
+            data-testid="vehicleNumber"
+            placeholder="1234"
+            type="text"
+            inputMode="numeric"
+            pattern="\d*"
+            value={vehicleNumber.data}
+            onClear={() => setVehicleNumber({ ...vehicleNumber, data: "" })}
+            onChange={handleChangeNumber}
+            error={vehicleNumber.error}
+            errorDesc={vehicleNumber.errorDesc}
+          />
+        </div>
+
+        <div className="w-full max-w-[64px]">
+          <TextField
+            id="vehicleCode"
+            data-testid="vehicleCode"
+            placeholder="XX"
+            type="text"
+            inputMode="text"
+            value={vehicleCode.data}
+            onClear={() => setVehicleCode({ ...vehicleCode, data: "" })}
+            onChange={handleChangeCode}
+            error={vehicleCode.error}
+            errorDesc={vehicleCode.errorDesc}
+          />
+        </div>
+      </div>
 
       <Button
         data-testid="cekPenerima"
-        text={isSubmitting ? <SpinnerLoading /> : "Cek Penerima"}
+        text={isSubmitting ? <SpinnerLoading /> : "Cek"}
         onClick={submitHandler}
         disabled={isSubmitting}
       />
