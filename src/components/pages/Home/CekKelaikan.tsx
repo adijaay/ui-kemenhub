@@ -6,18 +6,21 @@ import TextTitle from "@/components/ui/TextTitle";
 import { validateCity, validateCode, validateNumber } from "@/utils/validation";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { TResponseData } from "../DataPenerima/DataPenerima";
 import { SpinnerLoading } from "@/components/ui/SpinnerLoading";
+import { IconAlertTriangleFilled } from "@tabler/icons-react";
+import Text from "@/components/ui/Text";
 
-interface ICekPenerimaProgram {
-  setShowNotification: React.Dispatch<React.SetStateAction<boolean>>;
-  setShakeTrigger: React.Dispatch<React.SetStateAction<boolean>>;
-}
+type TResponseData = {
+  success: boolean;
+  message: string;
+  data: {
+    nik: string;
+    nisn: string;
+  };
+  error: string;
+};
 
-export default function CekPenerimaProgram({
-  setShowNotification,
-  setShakeTrigger,
-}: ICekPenerimaProgram) {
+export default function CekKelaikan() {
   const router = useRouter();
 
   const [vehicleCity, setVehicleCity] = useState({
@@ -102,7 +105,7 @@ export default function CekPenerimaProgram({
       setIsSubmitting(true);
       try {
         const response = await fetch(
-          `${process.env.BASE_API_URL}/api/v1/data-penerima?area=${vehicleCode.data}&code=${vehicleCity.data}&number=${vehicleNumber.data}`,
+          `${process.env.BASE_API_URL}/api/v1/layak-jalan?no_reg_kendaraan=${vehicleCity.data}${vehicleNumber.data}${vehicleCode.data}`,
         );
 
         if (response.status === 408) {
@@ -114,7 +117,7 @@ export default function CekPenerimaProgram({
 
         if (responseJson.success) {
           router.push({
-            pathname: "/data-penerima-program",
+            pathname: "/data-kelaikan-kendaraan",
             query: {
               vehicleCity: vehicleCity.data,
               vehicleNumber: vehicleNumber.data,
@@ -122,15 +125,20 @@ export default function CekPenerimaProgram({
             },
           });
         } else {
-          setShowNotification(true);
-          setShakeTrigger((prev) => !prev);
+          router.push({
+            pathname: "/data-kelaikan-kendaraan",
+            query: {
+              vehicleCity: vehicleCity.data,
+              vehicleNumber: vehicleNumber.data,
+              vehicleCode: vehicleCode.data,
+            },
+          });
         }
       } catch (error) {
         if (!navigator.onLine) {
           router.push("/offline");
         } else {
-          setShowNotification(true);
-          setShakeTrigger((prev) => !prev);
+          console.log(error);
         }
       } finally {
         setIsSubmitting(false);
@@ -160,6 +168,7 @@ export default function CekPenerimaProgram({
             onChange={handleChangeCity}
             error={vehicleCity.error}
             errorDesc={vehicleCity.errorDesc}
+            showError={false}
           />
         </div>
 
@@ -176,10 +185,34 @@ export default function CekPenerimaProgram({
             onChange={handleChangeNumber}
             error={vehicleNumber.error}
             errorDesc={vehicleNumber.errorDesc}
+            showError={false}
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              const regex = /[^0-9]/g;
+
+              if (regex.test(target.value)) {
+                target.value = target.value.replace(regex, "");
+              }
+              if (target.value.length > 4) {
+                target.value = target.value.slice(0, 4);
+              }
+            }}
+            onKeyDown={(e) => {
+              const isNumeric = /^[0-9]$/;
+              const isControlKey = [
+                "Backspace",
+                "ArrowLeft",
+                "ArrowRight",
+                "Delete",
+              ].includes(e.key);
+              if (!isNumeric.test(e.key) && !isControlKey) {
+                e.preventDefault();
+              }
+            }}
           />
         </div>
 
-        <div className="w-full max-w-[64px]">
+        <div className="w-full max-w-[84px]">
           <TextField
             id="vehicleCode"
             data-testid="vehicleCode"
@@ -191,15 +224,27 @@ export default function CekPenerimaProgram({
             onChange={handleChangeCode}
             error={vehicleCode.error}
             errorDesc={vehicleCode.errorDesc}
+            showError={false}
           />
         </div>
       </div>
+
+      {vehicleCity.error || vehicleNumber.error || vehicleCode.error ? (
+        <div className="flex items-center gap-1">
+          <IconAlertTriangleFilled size={12} color="#F04438" />
+          <Text className="!text-xs !text-[#F04438]">
+            {vehicleCity.errorDesc}
+            {vehicleNumber.errorDesc}
+            {vehicleCode.errorDesc}
+          </Text>
+        </div>
+      ) : undefined}
 
       <Button
         data-testid="cekPenerima"
         text={isSubmitting ? <SpinnerLoading /> : "Cek"}
         onClick={submitHandler}
-        disabled={isSubmitting}
+        disabled={isSubmitting || !vehicleCity.data}
       />
     </Container>
   );

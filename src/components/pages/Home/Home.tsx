@@ -1,29 +1,26 @@
 import Notifikasi from "@/components/commons/Notifikasi";
 import React, { useState } from "react";
-import CekPenerimaProgram from "./CekPenerimaProgram";
+import CekKelaikan from "./CekKelaikan";
 import Accordion from "@/components/commons/Accordion";
 import { faqData } from "@/constants/faq";
+import Snackbar from "@/components/ui/Snackbar";
 
 export default function Home() {
-  const [showNotification, setShowNotification] = useState<boolean>(true);
-  const [shakeTrigger, setShakeTrigger] = useState<boolean>(false);
-
   return (
     <>
       <Notifikasi
+        setShow={() => {}}
         data-testid="notifikasi"
-        isShow={showNotification}
-        setShow={setShowNotification}
+        isShow={true}
         message="Anda hanya dapat melakukan pengecekan kendaraan berplat nomor kuning."
         status="info"
-        triggerShake={shakeTrigger}
       />
 
-      <CekPenerimaProgram
-        setShowNotification={setShowNotification}
-        setShakeTrigger={setShakeTrigger}
-      />
+      <CekKelaikan />
 
+      <div className="text-[16px] font-semibold capitalize leading-6 text-[#000]">
+        <p>Paling banyak ditanya</p>
+      </div>
       <Accordion accordionData={faqData} />
     </>
   );

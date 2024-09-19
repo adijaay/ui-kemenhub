@@ -27,6 +27,7 @@ export default function Notifikasi({
   message,
   status,
   triggerShake,
+  children,
   ...props
 }: INotifikasi) {
   const [isShaking, setIsShaking] = useState<boolean>(false);
@@ -81,6 +82,8 @@ export default function Notifikasi({
             <div className="flex w-full flex-col gap-1">
               {title && <TextTitle className="text-sm">{title}</TextTitle>}
               <Text className="text-xs leading-[18px]">{message}</Text>
+
+              {children}
             </div>
             {closeable && (
               <IconX

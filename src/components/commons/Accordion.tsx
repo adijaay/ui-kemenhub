@@ -19,7 +19,7 @@ export default function Accordion({ accordionData }: IAccordion) {
   const buttonHandler = (index: number) => {
     setData((prevData) =>
       prevData.map((d, i) =>
-        i === index ? { ...d, isOpen: !d.isOpen } : { ...d, isOpen: false },
+        i === index ? { ...d, isOpen: !d.isOpen } : { ...d, isOpen: d.isOpen },
       ),
     );
   };
@@ -37,7 +37,7 @@ export default function Accordion({ accordionData }: IAccordion) {
             onClick={() => buttonHandler(index)}
             className="flex items-center gap-[18px] p-4"
           >
-            <TextTitle className="w-full text-start text-base">
+            <TextTitle className="w-full text-start text-[14px] leading-5">
               {item.title}
             </TextTitle>
             <IconChevronDown
@@ -48,7 +48,7 @@ export default function Accordion({ accordionData }: IAccordion) {
           </button>
 
           <div
-            className={`px-4 pb-4 text-sm font-normal text-[#1f1f1f] ${item.isOpen ? "block" : "hidden"} `}
+            className={`leading-5font-normal px-4 pb-4 text-[14px] text-[#1f1f1f] ${item.isOpen ? "block" : "hidden"} `}
             dangerouslySetInnerHTML={{ __html: item.content }}
           />
         </Container>

@@ -18,10 +18,8 @@ export function validateNumber(number: string): string | null {
 }
 
 export function validateCode(value: string): string | null {
-  if (value === "") {
-    return "Kode area harus diisi";
-  } else if (value.length > 2) {
-    return "Kode area maksimal 2 karakter";
+  if (value.length > 3) {
+    return "Kode area maksimal 3 karakter";
   } else {
     return null;
   }
