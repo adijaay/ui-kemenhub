@@ -134,7 +134,7 @@ export default function CardDataKelaikan({
             {isSuccess ? (
               <Chip
                 type={
-                  isDateExpired(data?.data_spionam?.tgl_exp_uji.split(" ")[0])
+                  isDateExpired(data?.data_blue?.masa_berlaku.split(" ")[0])
                     ? "error"
                     : "complete"
                 }
@@ -142,11 +142,11 @@ export default function CardDataKelaikan({
                   isSuccess
                     ? `${
                         isDateExpired(
-                          data?.data_spionam?.tgl_exp_uji.split(" ")[0],
+                          data?.data_blue?.masa_berlaku.split(" ")[0],
                         )
                           ? "Kedaluwarsa sejak"
                           : "Berlaku sampai"
-                      } ${formatDate(data?.data_spionam?.tgl_exp_uji.split(" ")[0])}`
+                      } ${formatDate(data?.data_blue?.masa_berlaku.split(" ")[0])}`
                     : error
                 }
               />

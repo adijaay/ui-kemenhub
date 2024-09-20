@@ -163,6 +163,7 @@ export default function CekKelaikan() {
             placeholder="XX"
             type="text"
             inputMode="text"
+            style={{ textTransform: "uppercase" }}
             value={vehicleCity.data}
             onClear={() => setVehicleCity({ ...vehicleCity, data: "" })}
             onChange={handleChangeCity}
@@ -180,6 +181,7 @@ export default function CekKelaikan() {
             type="text"
             inputMode="numeric"
             pattern="\d*"
+            style={{ textTransform: "uppercase" }}
             value={vehicleNumber.data}
             onClear={() => setVehicleNumber({ ...vehicleNumber, data: "" })}
             onChange={handleChangeNumber}
@@ -219,6 +221,7 @@ export default function CekKelaikan() {
             placeholder="XX"
             type="text"
             inputMode="text"
+            style={{ textTransform: "uppercase" }}
             value={vehicleCode.data}
             onClear={() => setVehicleCode({ ...vehicleCode, data: "" })}
             onChange={handleChangeCode}
