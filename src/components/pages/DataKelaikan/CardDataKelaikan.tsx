@@ -41,7 +41,7 @@ export default function CardDataKelaikan({
       ) : (
         <Container className="!gap-0 !p-4">
           <div className="flex w-full flex-col gap-1">
-            <p className="text-[16px] font-semibold leading-6 text-[#1F1F1F]">
+            <p className="text-[16px] font-semibold uppercase leading-6 text-[#1F1F1F]">
               {vehicleIdentity}
             </p>
             <p className="text-[14px] font-normal leading-5 text-[#667085]">
