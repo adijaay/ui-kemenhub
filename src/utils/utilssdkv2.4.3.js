@@ -1,15 +1,15 @@
 // script ini berfungsi untuk komunkasi antara MiniApp dan MainApp
 export default class UtilsSDK {
-  // constructor() {
-  //   if (!this.isInaDigital()) {
-  //     //   throw new Error("Invalid Site ...");
-  //     location.href = "/invalid-site";
-  //   }
-  //   window.addEventListener(
-  //     "flutterInAppWebViewPlatformReady",
-  //     async function (event) {},
-  //   );
-  // }
+  constructor() {
+    if (!this.isInaDigital()) {
+      //   throw new Error("Invalid Site ...");
+      location.href = "/invalid-site";
+    }
+    window.addEventListener(
+      "flutterInAppWebViewPlatformReady",
+      async function (event) {},
+    );
+  }
   async callHandler(
     method = "",
     arg1 = null,
