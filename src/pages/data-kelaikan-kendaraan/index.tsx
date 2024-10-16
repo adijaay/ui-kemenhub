@@ -5,7 +5,7 @@ import Head from "next/head";
 
 export default function DataPenerimaPage() {
   return (
-    <Page pageTitle="Cek Kelaikan Kendaraan" onBackLink="/">
+    <Page pageTitle="Cek Kelaikan Kendaraan">
       <Head>
         <title>Cek Kelaikan Kendaraan</title>
       </Head>

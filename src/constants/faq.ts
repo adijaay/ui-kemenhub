@@ -6,7 +6,7 @@ export const faqData = [
     isOpen: false,
   },
   {
-    title: "Jenis Kendaraan Berplat Kuning?",
+    title: "Jenis Kendaraan Berplat Kuning",
     content: `
     <ol style="list-style-type: decimal">
       <li style="margin-left: 16px;">Angkot (Angkutan Umum)</li>

@@ -154,9 +154,11 @@ export default function CekKelaikan() {
 
   return (
     <Container>
-      <TextTitle className="text-base">Plat Nomor Kendaraan</TextTitle>
+      <TextTitle className="text-base !font-medium">
+        Plat Nomor Kendaraan
+      </TextTitle>
       <div className="flex w-full items-center justify-start gap-2">
-        <div className="w-full max-w-[64px]">
+        <div className="w-full max-w-16">
           <TextField
             id="vehicleCity"
             data-testid="vehicleCity"
@@ -214,7 +216,7 @@ export default function CekKelaikan() {
           />
         </div>
 
-        <div className="w-full max-w-[84px]">
+        <div className="w-full max-w-16">
           <TextField
             id="vehicleCode"
             data-testid="vehicleCode"
@@ -222,9 +224,12 @@ export default function CekKelaikan() {
             type="text"
             inputMode="text"
             style={{ textTransform: "uppercase" }}
-            value={vehicleCode.data}
+            value={vehicleCode.data.toUpperCase()}
             onClear={() => setVehicleCode({ ...vehicleCode, data: "" })}
-            onChange={handleChangeCode}
+            onChange={(e) => {
+              handleChangeCode(e);
+              e.target.value = e.target.value.toUpperCase();
+            }}
             error={vehicleCode.error}
             errorDesc={vehicleCode.errorDesc}
             showError={false}
