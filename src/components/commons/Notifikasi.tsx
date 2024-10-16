@@ -73,7 +73,7 @@ export default function Notifikasi({
     isShow && (
       <Container
         id="notifikasi"
-        className={`${isShaking ? "gentle-shake" : ""} !p-4 ${styleContainer(status)}`}
+        className={`${isShaking ? "gentle-shake" : ""} !rounded-xl !p-4 ${styleContainer(status)}`}
         {...props}
       >
         <div className="flex gap-3">

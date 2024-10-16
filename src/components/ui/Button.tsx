@@ -21,7 +21,7 @@ export default function Button({ text, onClick, disabled, ...props }: IButton) {
     }
   };
 
-  const buttonClass = `flex h-13 rounded-xl items-center justify-center text-base font-semibold text-white ${
+  const buttonClass = `flex h-13 rounded-xl items-center justify-center text-base font-semibold ${
     isPressed ? "bg-[#182230]" : "bg-[#0C111D]"
   } ${disabled ? "cursor-not-allowed bg-[#EAECF0] text-[#98A1B2]" : ""}`;
 
