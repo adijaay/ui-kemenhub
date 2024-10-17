@@ -20,11 +20,15 @@
     "firebase": "^10.12.3",
     "ina-digital-sdk": "file:package/ina-digital-sdk",
     "ina-ui": "file:package/ina-ui",
+    "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
+    "moment": "^2.30.1",
     "next": "^14.2.5",
     "platform": "^1.3.6",
     "react": "^18",
     "react-dom": "^18",
-    "react-loading-skeleton": "^3.4.0"
+    "react-loading-skeleton": "^3.4.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",
@@ -32,9 +36,11 @@
     "@types/crypto-js": "^4.2.2",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "@typescript-eslint/parser": "^7.16.0",
     "autoprefixer": "^10.0.1",
