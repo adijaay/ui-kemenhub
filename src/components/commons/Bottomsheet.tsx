@@ -39,11 +39,11 @@ export default function Bottomsheet({
           <p className="text-base font-semibold text-[#212121]">{title}</p>
           <IconX
             color="#182230"
-            width={20}
-            height={20}
+            width={24}
+            height={24}
             cursor={"pointer"}
             onClick={() => setShow(false)}
-            strokeWidth="2.75"
+            stroke-width="2.5"
           />
         </div>
 
