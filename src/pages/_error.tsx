@@ -8,6 +8,7 @@ interface ErrorProps {
   statusCode: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ErrorPage = ({ statusCode }: ErrorProps) => {
   const { push } = useRouter();
   return (

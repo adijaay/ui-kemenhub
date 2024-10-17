@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import UtilsSDK from "@/utils/utilssdkv2.4.3";
