@@ -105,13 +105,14 @@ export default function DataKelaikan() {
             className="flex cursor-pointer items-center justify-start gap-1"
             onClick={() => setShowBottomSheet(true)}
           >
-            <p className="text-[12px] font-semibold leading-tight text-[#2871FF]">
+            <p className="items-center text-[12px] font-semibold leading-tight text-[#2871FF]">
               Tentang HUBNET
             </p>
             <IconChevronRight
               width={16}
               height={16}
-              strokeWidth="2.75"
+              stroke-width="2.25"
+              className="pb-0.25"
               color="#2871FF"
             />
           </div>
