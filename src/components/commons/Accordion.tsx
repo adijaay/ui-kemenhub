@@ -42,7 +42,7 @@ export default function Accordion({ accordionData }: IAccordion) {
             </TextTitle>
             <IconChevronDown
               size={24}
-              color="#667085"
+              color="#182230"
               className={`shrink-0 ${item.isOpen ? "rotate-180" : ""} duration-300`}
             />
           </button>
