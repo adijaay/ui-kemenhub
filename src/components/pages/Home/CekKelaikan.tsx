@@ -252,7 +252,7 @@ export default function CekKelaikan() {
         data-testid="cekPenerima"
         text={isSubmitting ? <SpinnerLoading /> : "Cek"}
         onClick={submitHandler}
-        disabled={isSubmitting || !vehicleCity.data}
+        disabled={isSubmitting || !vehicleCity.data || !vehicleNumber.data}
       />
     </Container>
   );
