@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import { SpinnerLoading } from "@/components/ui/SpinnerLoading";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import Text from "@/components/ui/Text";
+import { encrypt } from "@/utils/encrypt";
 
 type TResponseData = {
   success: boolean;
@@ -104,36 +105,42 @@ export default function CekKelaikan() {
     } else {
       setIsSubmitting(true);
       try {
-        const response = await fetch(
-          `${process.env.BASE_API_URL}/api/v1/layak-jalan?no_reg_kendaraan=${vehicleCity.data}${vehicleNumber.data}${vehicleCode.data}`,
-        );
+        const no_reg_vehicle = `${vehicleCity.data}${vehicleNumber.data}${vehicleCode.data}`;
 
-        if (response.status === 408) {
-          router.push("/408");
-          return;
+        if (no_reg_vehicle) {
+          localStorage.setItem("data", no_reg_vehicle);
+          router.push("/data-kelaikan-kendaraan");
         }
+        // const response = await fetch(
+        //   `${process.env.BASE_API_URL}/api/v1/layak-jalan?no_reg_kendaraan=${vehicleCity.data}${vehicleNumber.data}${vehicleCode.data}`,
+        // );
 
-        const responseJson: TResponseData = await response.json();
+        // if (response.status === 408) {
+        //   router.push("/408");
+        //   return;
+        // }
 
-        if (responseJson.success) {
-          router.push({
-            pathname: "/data-kelaikan-kendaraan",
-            query: {
-              vehicleCity: vehicleCity.data,
-              vehicleNumber: vehicleNumber.data,
-              vehicleCode: vehicleCode.data,
-            },
-          });
-        } else {
-          router.push({
-            pathname: "/data-kelaikan-kendaraan",
-            query: {
-              vehicleCity: vehicleCity.data,
-              vehicleNumber: vehicleNumber.data,
-              vehicleCode: vehicleCode.data,
-            },
-          });
-        }
+        // const responseJson: TResponseData = await response.json();
+
+        // if (responseJson.success) {
+        //   router.push({
+        //     pathname: "/data-kelaikan-kendaraan",
+        //     query: {
+        //       vehicleCity: vehicleCity.data,
+        //       vehicleNumber: vehicleNumber.data,
+        //       vehicleCode: vehicleCode.data,
+        //     },
+        //   });
+        // } else {
+        //   router.push({
+        //     pathname: "/data-kelaikan-kendaraan",
+        //     query: {
+        //       vehicleCity: vehicleCity.data,
+        //       vehicleNumber: vehicleNumber.data,
+        //       vehicleCode: vehicleCode.data,
+        //     },
+        //   });
+        // }
       } catch (error) {
         if (!navigator.onLine) {
           router.push("/offline");
