@@ -9,17 +9,6 @@ import React, { useEffect, useState } from "react";
 import { SpinnerLoading } from "@/components/ui/SpinnerLoading";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import Text from "@/components/ui/Text";
-import { encrypt } from "@/utils/encrypt";
-
-type TResponseData = {
-  success: boolean;
-  message: string;
-  data: {
-    nik: string;
-    nisn: string;
-  };
-  error: string;
-};
 
 export default function CekKelaikan() {
   const router = useRouter();
@@ -105,47 +94,17 @@ export default function CekKelaikan() {
     } else {
       setIsSubmitting(true);
       try {
-        const no_reg_vehicle = `${vehicleCity.data}${vehicleNumber.data}${vehicleCode.data}`;
-
-        if (no_reg_vehicle) {
-          localStorage.setItem("data", no_reg_vehicle);
+        if (vehicleCity && vehicleNumber && vehicleCode) {
+          localStorage.setItem("vehicleCity", vehicleCity.data);
+          localStorage.setItem("vehicleNumber", vehicleNumber.data);
+          localStorage.setItem("vehicleCode", vehicleCode.data);
           router.push("/data-kelaikan-kendaraan");
         }
-        // const response = await fetch(
-        //   `${process.env.BASE_API_URL}/api/v1/layak-jalan?no_reg_kendaraan=${vehicleCity.data}${vehicleNumber.data}${vehicleCode.data}`,
-        // );
-
-        // if (response.status === 408) {
-        //   router.push("/408");
-        //   return;
-        // }
-
-        // const responseJson: TResponseData = await response.json();
-
-        // if (responseJson.success) {
-        //   router.push({
-        //     pathname: "/data-kelaikan-kendaraan",
-        //     query: {
-        //       vehicleCity: vehicleCity.data,
-        //       vehicleNumber: vehicleNumber.data,
-        //       vehicleCode: vehicleCode.data,
-        //     },
-        //   });
-        // } else {
-        //   router.push({
-        //     pathname: "/data-kelaikan-kendaraan",
-        //     query: {
-        //       vehicleCity: vehicleCity.data,
-        //       vehicleNumber: vehicleNumber.data,
-        //       vehicleCode: vehicleCode.data,
-        //     },
-        //   });
-        // }
       } catch (error) {
         if (!navigator.onLine) {
           router.push("/offline");
         } else {
-          console.log(error);
+          console.error(error);
         }
       } finally {
         setIsSubmitting(false);

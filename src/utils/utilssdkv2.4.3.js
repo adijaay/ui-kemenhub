@@ -3,7 +3,9 @@ export default class UtilsSDK {
   constructor() {
     if (!this.isInaDigital()) {
       //   throw new Error("Invalid Site ...");
-      location.href = "/invalid-site";
+      if (process.env.NODE_ENV === "production") {
+        location.href = "/invalid-site";
+      }
     }
     window.addEventListener(
       "flutterInAppWebViewPlatformReady",

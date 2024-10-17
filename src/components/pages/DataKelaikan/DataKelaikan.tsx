@@ -1,72 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-
 import CardDataKelaikan from "./CardDataKelaikan";
-
-import { useRouter } from "next/router";
 import Notifikasi from "@/components/commons/Notifikasi";
 import { IconChevronRight } from "@tabler/icons-react";
 import Bottomsheet from "@/components/commons/Bottomsheet";
-
-const defaultData = {
-  data_rampcheck: "",
-  data_spionam: {
-    spionam_id: 0,
-    noken: "",
-    no_uji: "",
-    tgl_exp_uji: "",
-    no_kps: "",
-    tgl_exp_kps: "",
-    no_srut: 0,
-    nama_perusahaan: "",
-  },
-  data_blue: {
-    blue_id: 0,
-    date: "",
-    no_srut: 0,
-    tgl_srut: "",
-    no_registrasi_kendaraan: "",
-    keterangan_hasil_uji: 0,
-    masa_berlaku: "",
-  },
-};
-type TDataSpionam = {
-  spionam_id: number;
-  noken: string;
-  no_uji: string;
-  tgl_exp_uji: string;
-  no_kps: string;
-  tgl_exp_kps: string;
-  no_srut: number;
-  nama_perusahaan: string;
-};
-
-type TDataBlue = {
-  blue_id: number;
-  date: string;
-  no_srut: number;
-  tgl_srut: string;
-  no_registrasi_kendaraan: string;
-  keterangan_hasil_uji: number;
-  masa_berlaku: string;
-};
-
-export type TDataKendaraan = {
-  data_rampcheck: string;
-  data_spionam: TDataSpionam;
-  data_blue: TDataBlue;
-};
-
-export type TResponseData = {
-  success: boolean;
-  message: string;
-  data: TDataKendaraan;
-  error: string;
-};
+import { getCookie } from "@/utils/utils";
+import { decrypt, encrypt } from "@/utils/encrypt";
+import { v4 as uuidv4 } from "uuid";
+import fetchApi from "@/utils/axios";
+import { defaultData } from "@/constants/vehicle";
+import { TEncResponseData, TResponseData } from "@/definitions/vehicle";
 
 export default function DataKelaikan() {
-  const router = useRouter();
-  const { vehicleCity, vehicleNumber, vehicleCode } = router.query;
+  const [vehicleNumber, setVehicleNumber] = useState<string>("");
   const [showBottomSheet, setShowBottomSheet] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
@@ -77,29 +23,73 @@ export default function DataKelaikan() {
     error: "",
   });
 
-  const fetchData = async (
-    vehicleCity?: string | string[],
-    vehicleNumber?: string | string[],
-    vehicleCode?: string | string[],
-  ): Promise<TResponseData> => {
+  const fetchData = async (no_reg_kendaraan: string | string[]) => {
     setIsFetching(true);
-    const response = await fetch(
-      `${process.env.BASE_API_URL}/api/v1/layak-jalan?no_reg_kendaraan=${vehicleCity}${vehicleNumber}${vehicleCode}`,
-    );
-    const responseJson: Promise<TResponseData> = await response.json();
 
-    setIsFetching(false);
+    const token = getCookie("inaku_token");
+    const formData = new FormData();
+    const formBody = {
+      no_reg_kendaraan,
+    };
 
-    return responseJson;
+    const encryptedData = encrypt(formBody);
+    if (typeof encryptedData === "string") {
+      formData.append("data", encryptedData);
+    } else {
+      throw new Error("Encryption failed, expected a string.");
+    }
+
+    try {
+      const response = await fetchApi.post("/v1/layak-jalan", formData, {
+        headers: {
+          token: token,
+          "Content-Type": "multipart/form-data",
+          "X-Request-ID": uuidv4(),
+        },
+      });
+
+      const { data } = response;
+
+      return data;
+    } catch (err) {
+      console.error("error occured when fetching:", err);
+    }
   };
 
   useEffect(() => {
-    if (vehicleCity && vehicleNumber && vehicleCode) {
-      fetchData(vehicleCity, vehicleNumber, vehicleCode).then((response) => {
-        setDataKendaraan(response);
-      });
+    const vehicleCity = window.localStorage.getItem("vehicleCity");
+    const vehicleNumber = window.localStorage.getItem("vehicleNumber");
+    const vehicleCode = window.localStorage.getItem("vehicleCode");
+
+    const no_reg_vehicle = `${vehicleCity}${vehicleNumber}${vehicleCode}`;
+
+    if (no_reg_vehicle) {
+      setVehicleNumber(`${vehicleCity} ${vehicleNumber} ${vehicleCode}`);
+
+      fetchData(no_reg_vehicle)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((response: TEncResponseData) => {
+          const decryptData = decrypt(response.data);
+
+          setDataKendaraan({
+            success: response.success,
+            message: response.message,
+            data: decryptData,
+            error: response.error,
+          });
+        })
+        .catch((err) => {
+          console.error("error occured in useEffect:", err);
+        })
+        .finally(() => {
+          setIsFetching(false);
+        });
     }
-  }, [vehicleCity, vehicleNumber, vehicleCode]);
+
+    return () => {
+      window.localStorage.removeItem("data");
+    };
+  }, []);
 
   return (
     <>
@@ -120,7 +110,7 @@ export default function DataKelaikan() {
             <IconChevronRight
               width={16}
               height={16}
-              stroke-width="2.75"
+              strokeWidth="2.75"
               color="#2871FF"
             />
           </div>
@@ -128,7 +118,7 @@ export default function DataKelaikan() {
       ) : undefined}
 
       <CardDataKelaikan
-        vehicleIdentity={`${vehicleCity} ${vehicleNumber} ${vehicleCode}`}
+        vehicleIdentity={vehicleNumber}
         data={dataKendaraan.data}
         isSuccess={dataKendaraan.success}
         error={dataKendaraan.error}

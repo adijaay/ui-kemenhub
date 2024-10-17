@@ -1,12 +1,8 @@
 import Container from "@/components/ui/Container";
-
-import React, { useEffect } from "react";
-import sendFirebase from "@/utils/firebase";
-
 import Chip from "@/components/ui/Chip";
-import { TDataKendaraan } from "./DataKelaikan";
 import { formatDate, isDateExpired } from "@/utils/utils";
 import CardLoadingDataKelaikan from "./CardLoadingDataKelaikan";
+import { TDataKendaraan } from "@/definitions/vehicle";
 
 interface ICardDataKelaikan {
   vehicleIdentity: string;
@@ -23,17 +19,6 @@ export default function CardDataKelaikan({
   error,
   isLoading,
 }: ICardDataKelaikan) {
-  useEffect(() => {
-    if (vehicleIdentity) {
-      // sendFirebase({
-      //   id_list_product: 829002,
-      //   list_product_name: "data-penerima-program",
-      //   id_product: parseInt(nisn),
-      //   product_name: nama,
-      // });
-    }
-  }, [vehicleIdentity]);
-
   return (
     <>
       {isLoading ? (

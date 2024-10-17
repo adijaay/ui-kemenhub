@@ -31,3 +31,34 @@ export const isDateExpired = (dateString: string): boolean => {
     return false;
   }
 };
+
+export function getCookie(cname: string): string {
+  const name = cname + "=";
+  if (typeof window !== "undefined") {
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+  }
+  return "";
+}
+
+export function getAllCookies(): { [key: string]: string } {
+  const cookies: { [key: string]: string } = {};
+  if (typeof window !== "undefined") {
+    const ca = document.cookie.split(";");
+    ca.forEach((cookie) => {
+      const [name, value] = cookie.split("=").map((c) => c.trim());
+      if (name && value) {
+        cookies[name] = value;
+      }
+    });
+  }
+  return cookies;
+}
