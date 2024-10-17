@@ -43,7 +43,7 @@ export default function Bottomsheet({
             height={20}
             cursor={"pointer"}
             onClick={() => setShow(false)}
-            stroke-width="2.75"
+            strokeWidth="2.75"
           />
         </div>
 
