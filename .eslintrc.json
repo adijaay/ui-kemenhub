@@ -1,0 +1,58 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "react",
+    "react-hooks",
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "quotes": ["warn", "double"],
+    "react/prop-types": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "react/no-children-prop": ["off"],
+    "react/jsx-key": "error",
+    "react/button-has-type": "warn",
+    "semi": "warn",
+    "comma-dangle": ["warn", "always-multiline"],
+    "no-console": [
+      "warn",
+      {
+        "allow": ["clear", "info", "error", "dir", "trace", "warn"]
+      }
+    ],
+    "react/jsx-filename-extension": "off",
+    "react/function-component-definition": "off",
+    "comma-spacing": "warn",
+    "object-curly-spacing": ["warn", "always"],
+    "import/no-anonymous-default-export": "off",
+    "prefer-const": "warn",
+    "@next/next/no-img-element": ["off"],
+    "@typescript-eslint/no-empty-function": ["warn"],
+
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["warn"],
+
+    "indent": "off",
+    "no-use-before-define": "off",
+    "camelcase": "off",
+    "quote-props": "off",
+    "max-len": "off",
+    "@typescript-eslint/indent": ["warn", 2],
+    "import/extensions": "off",
+    "import/no-named-as-default-member": "off",
+    "react/jsx-first-prop-new-line": "warn",
+    "react/jsx-closing-tag-location": "warn",
+    "@next/next/no-html-link-for-pages": ["error", "packages/my-app/pages/"],
+    "no-useless-catch": "off",
+    "@typescript-eslint/no-empty-interface": "warn",
+    "no-prototype-builtins": "off"
+  }
+}

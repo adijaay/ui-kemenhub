@@ -1,0 +1,41 @@
+{
+  "name": "ina-digital-sdk",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "publish-lib": "npm run build && npm publish",
+    "publish-beta": "npm run build && npm publish --tag beta",
+    "publish-dryrun": "npm run build && npm publish --dry-run"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "keywords": [
+    "typescript",
+    "library"
+  ],
+  "author": "INA Digital",
+  "license": "PERURI",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "bowser": "^2.11.0",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "platform": "^1.3.6"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.22",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
