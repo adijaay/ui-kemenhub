@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import Notifikasi from "@/components/commons/Notifikasi";
-import React, { useState } from "react";
 import CekKelaikan from "./CekKelaikan";
 import Accordion from "@/components/commons/Accordion";
 import { faqData } from "@/constants/faq";
-import Snackbar from "@/components/ui/Snackbar";
 
 export default function Home() {
   return (

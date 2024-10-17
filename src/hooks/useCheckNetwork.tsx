@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 
 function NetworkProvider({ children }: React.PropsWithChildren) {
@@ -40,11 +42,7 @@ function NetworkProvider({ children }: React.PropsWithChildren) {
       window.removeEventListener("offline", goOffline);
     };
   });
-  return (
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
 
 export default NetworkProvider;

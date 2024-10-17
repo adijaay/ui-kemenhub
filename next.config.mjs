@@ -12,6 +12,8 @@ const nextConfig = {
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
     API_INA_BASE_URL: process.env.API_INA_BASE_URL,
+    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
+    ENCRYPTION_TYPE: process.env.ENCRYPTION_TYPE,
   },
   basePath: process.env.BASE_PATH,
   assetPrefix: process.env.BASE_PATH,

@@ -1,9 +1,14 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // script ini berfungsi untuk komunkasi antara MiniApp dan MainApp
 export default class UtilsSDK {
   constructor() {
     if (!this.isInaDigital()) {
       //   throw new Error("Invalid Site ...");
-      location.href = "/invalid-site";
+      if (process.env.NODE_ENV === "production") {
+        location.href = "/invalid-site";
+      }
     }
     window.addEventListener(
       "flutterInAppWebViewPlatformReady",
