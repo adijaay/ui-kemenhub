@@ -21,19 +21,23 @@ export default function Page({
   useEffect(() => {
     const sdk = new UtilsSDK();
 
-    sdk.setTitle(pageTitle).catch(() => console.log("Skip setTitle"));
+    sdk.setTitle(pageTitle).catch((err) => {
+      throw err;
+    });
 
     if (homePage) {
-      sdk.clearHistory().catch(() => console.log("Skip clearHistory"));
+      sdk.clearHistory().catch((err) => {
+        throw err;
+      });
     } else {
       if (onBackLink) {
-        sdk
-          .onBack("custom", `location.href="${onBackLink}"`)
-          .catch(() => console.log("Skip onBack"));
+        sdk.onBack("custom", `location.href="${onBackLink}"`).catch((err) => {
+          throw err;
+        });
       } else if (onBackCustom) {
-        sdk
-          .onBack("custom", `${onBackCustom}`)
-          .catch(() => console.log("Skip onBack"));
+        sdk.onBack("custom", `${onBackCustom}`).catch((err) => {
+          throw err;
+        });
       }
     }
   }, []);

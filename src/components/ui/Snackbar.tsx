@@ -32,9 +32,13 @@ export default function Snackbar({
       style={{ boxShadow: "0 4px 20px 0 #00000026" }}
     >
       {isSuccess ? (
-        <IconCircleCheckFilled size={24} color="#19B26B" />
+        <IconCircleCheckFilled
+          data-testid="success-icon"
+          size={24}
+          color="#19B26B"
+        />
       ) : (
-        <IconCircleX size={24} color="#AF2A2D" />
+        <IconCircleX data-testid="x-icon" size={24} color="#AF2A2D" />
       )}
       <Text className="!font-medium">{text}</Text>
     </div>
