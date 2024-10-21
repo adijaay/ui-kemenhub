@@ -107,7 +107,7 @@ const config: Config = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "^@/utils/utilssdkv2.3$": "<rootDir>/src/utils/utilssdkv2.3.js",
+    "^@/utils/utilssdkv2.4.3$": "<rootDir>/src/utils/utilssdkv2.4.3.js",
     "^@/components/ui/Page$": "<rootDir>/src/components/ui/Page.tsx",
     "^@/utils/firebase$": "<rootDir>/src/utils/firebase.ts",
   },

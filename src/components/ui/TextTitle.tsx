@@ -7,6 +7,11 @@ interface ITextTitle {
 
 export default function TextTitle({ children, className }: ITextTitle) {
   return (
-    <p className={`font-semibold text-[#1f1f1f] ${className}`}>{children}</p>
+    <p
+      data-testid="text-title"
+      className={`font-semibold text-[#1f1f1f] ${className}`}
+    >
+      {children}
+    </p>
   );
 }
