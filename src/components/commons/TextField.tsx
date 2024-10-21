@@ -32,7 +32,7 @@ export default function TextField({
 }: ITextField) {
   return (
     <div className="flex flex-col gap-2">
-      {label ? <InputLabel text={`${label}`} /> : undefined}
+      {label && <InputLabel text={`${label}`} />}
       <Input
         value={value}
         onClear={onClear}

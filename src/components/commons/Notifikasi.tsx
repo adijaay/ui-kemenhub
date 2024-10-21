@@ -36,13 +36,30 @@ export default function Notifikasi({
     switch (status) {
       case "caution":
         return (
-          <IconAlertCircle size={24} color="#F79008" className="shrink-0" />
+          <IconAlertCircle
+            data-testid="icon-caution"
+            size={24}
+            color="#F79008"
+            className="shrink-0"
+          />
         );
       case "alert":
-        return <IconCircleX size={24} color="#AF2A2D" className="shrink-0" />;
+        return (
+          <IconCircleX
+            data-testid="icon-alert"
+            size={24}
+            color="#AF2A2D"
+            className="shrink-0"
+          />
+        );
       case "info":
         return (
-          <IconInfoCircle size={24} color="#2871FF" className="shrink-0" />
+          <IconInfoCircle
+            data-testid="icon-info"
+            size={24}
+            color="#2871FF"
+            className="shrink-0"
+          />
         );
     }
   };
@@ -73,6 +90,7 @@ export default function Notifikasi({
     isShow && (
       <Container
         id="notifikasi"
+        data-testid="notifikasi"
         className={`${isShaking ? "gentle-shake" : ""} !rounded-xl !p-4 ${styleContainer(status)}`}
         {...props}
       >
@@ -87,6 +105,7 @@ export default function Notifikasi({
             </div>
             {closeable && (
               <IconX
+                data-testid="icon-close"
                 onClick={() => setShow(false)}
                 size={12}
                 color="#182230"
