@@ -3,7 +3,7 @@ import ErrorState from "@/components/commons/ErrorState";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const Custom404Page = () => {
+const Custom408Page = () => {
   const { push } = useRouter();
   return (
     <ErrorState
@@ -16,4 +16,4 @@ const Custom404Page = () => {
   );
 };
 
-export default Custom404Page;
+export default Custom408Page;

@@ -6,8 +6,7 @@ import moment from "moment";
 import Cookies from "js-cookie";
 
 const getRefreshToken = async (refresh_token: string) => {
-  const appUrl =
-    process.env.API_INA_BASE_URL + "/ext/user/refresh-token";
+  const appUrl = process.env.API_INA_BASE_URL + "/ext/user/refresh-token";
   const result = await axios({
     url: appUrl,
     method: "POST",
@@ -39,7 +38,6 @@ const fetchApi = axios.create({
   },
 });
 
-// Add a request interceptor
 fetchApi.interceptors.request.use(
   async (config) => {
     try {
@@ -54,16 +52,16 @@ fetchApi.interceptors.request.use(
         if (expiryAccessToken) {
           const now = moment().unix();
           const statusIsAfter = moment(now).isSameOrAfter(
-            expiryAccessToken - 45
+            expiryAccessToken - 45,
           );
           const statusIsBeforeRefresh = moment(now).isSameOrBefore(
-            expiryRefreshToken - 45
+            expiryRefreshToken - 45,
           );
           if (statusIsBeforeRefresh) {
             if (statusIsAfter) {
               // doing fetch refresh token
               const response = await getRefreshToken(
-                inaku_refresh_token as string
+                inaku_refresh_token as string,
               );
               if (response?.data?.statusCode === 200) {
                 // const defaultAccTokenExp = new Date().getTime() + 5 * 60000;
@@ -76,7 +74,7 @@ fetchApi.interceptors.request.use(
                 const newRefreshToken =
                   response.data?.data?.refresh_token || "";
                 const newRefreshTokenExpiry = new Date(
-                  response.data?.data?.refresh_token_exp || defaultRefTokenExp
+                  response.data?.data?.refresh_token_exp || defaultRefTokenExp,
                 );
                 Cookies.set("inaku_token", newAccessToken, {
                   expires: newRefreshTokenExpiry,
@@ -104,7 +102,7 @@ fetchApi.interceptors.request.use(
   (error) => {
     // Do something with request error
     return Promise.reject(error);
-  }
+  },
 );
 
 // Add a response interceptor
@@ -118,7 +116,7 @@ fetchApi.interceptors.response.use(
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     return Promise.reject(error);
-  }
+  },
 );
 
 export default fetchApi;

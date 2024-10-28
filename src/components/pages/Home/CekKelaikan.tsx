@@ -215,7 +215,7 @@ export default function CekKelaikan() {
       ) : undefined}
 
       <Button
-        data-testid="cekPenerima"
+        data-testid="cekKelaikan"
         text={isSubmitting ? <SpinnerLoading /> : "Cek"}
         onClick={submitHandler}
         disabled={isSubmitting || !vehicleCity.data || !vehicleNumber.data}

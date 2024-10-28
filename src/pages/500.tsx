@@ -8,7 +8,7 @@ const Custom500Page = () => {
   return (
     <ErrorState
       title="Sedang Terjadi Kendala Teknis"
-      subtitle="Maaf, sedang terjadi kendala teknis dan saat ini kami dalam proses memperbaikinya. Silakan coba akses beberapa saat lagi. "
+      subtitle="Maaf, sedang terjadi kendala teknis dan saat ini kami dalam proses memperbaikinya. Silakan coba akses beberapa saat lagi."
       image="/assets/servererrorgeneral.svg"
       onClick={() => push("/")}
       buttonText="Kembali ke Beranda"

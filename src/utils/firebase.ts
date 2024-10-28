@@ -4,7 +4,7 @@ import { getAnalytics, logEvent } from "firebase/analytics";
 import { getPerformance } from "firebase/performance";
 import { FirebaseParams } from "@/definitions/firebase";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
   projectId: process.env.FIREBASE_PROJECT_ID,
@@ -20,6 +20,8 @@ let perf: any;
 if (firebaseConfig?.projectId) {
   const app = initializeApp(firebaseConfig);
 
+  console.log("appName:", app.name);
+
   if (app.name && typeof window !== "undefined") {
     analytics = getAnalytics(app);
     perf = getPerformance(app);
@@ -28,8 +30,8 @@ if (firebaseConfig?.projectId) {
 
 export { analytics, logEvent, perf };
 export default function sendFirebase(dataParams: FirebaseParams) {
-  const currentPagePath = window.location.pathname; 
-  const router = `/homepage/program-indonesia-pintar${currentPagePath}`;
+  const currentPagePath = window.location.pathname;
+  const router = `/homepage/cek-kelaikan-kendaraan${currentPagePath}`;
 
   const params: FirebaseParams = {
     id_filter: dataParams.id_filter || null,
@@ -42,10 +44,6 @@ export default function sendFirebase(dataParams: FirebaseParams) {
     product_name: dataParams.product_name || null,
     page_path: router,
   };
-
-  // console.log("Current Page Path:", currentPagePath);
-  // console.log("Router:", router);
-  // console.log("Firebase Params:", params);
 
   logEvent(analytics, "page_view", params);
 }

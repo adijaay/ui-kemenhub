@@ -4,7 +4,7 @@ import { NextPageContext } from "next";
 
 import { useRouter } from "next/router";
 
-interface ErrorProps {
+export interface ErrorProps {
   statusCode: number;
 }
 
