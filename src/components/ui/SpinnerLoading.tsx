@@ -1,5 +1,6 @@
 export const SpinnerLoading = () => (
   <svg
+    data-testid="loading-spinner"
     xmlns="http://www.w3.org/2000/svg"
     width="21"
     height="20"

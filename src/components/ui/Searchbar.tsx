@@ -26,6 +26,7 @@ export default function Searchbar({
       />
       {value && (
         <IconX
+          data-testid="icon-x"
           onClick={onClear}
           size={24}
           color="#182230"

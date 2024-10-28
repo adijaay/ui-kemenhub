@@ -48,7 +48,7 @@ export default function Accordion({ accordionData }: IAccordion) {
           </button>
 
           <div
-            className={`leading-5font-normal border-t border-[#EAECF0] px-4 pb-4 pt-4 text-[14px] text-[#1f1f1f] ${item.isOpen ? "block" : "hidden"} `}
+            className={`border-t border-[#EAECF0] px-4 pb-4 pt-4 text-[14px] font-normal leading-5 text-[#1f1f1f] ${item.isOpen ? "block" : "hidden"} `}
             dangerouslySetInnerHTML={{ __html: item.content }}
           />
         </Container>

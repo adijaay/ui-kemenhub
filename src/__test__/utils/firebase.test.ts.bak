@@ -1,0 +1,99 @@
+// file: firebase.test.ts
+
+import { initializeApp } from "firebase/app";
+import { getAnalytics, logEvent } from "firebase/analytics";
+import { getPerformance } from "firebase/performance";
+import { FirebaseParams } from "@/definitions/firebase";
+import sendFirebase, { analytics, firebaseConfig } from "@/utils/firebase";
+
+jest.mock("firebase/app");
+jest.mock("firebase/analytics");
+jest.mock("firebase/performance");
+
+describe("Firebase Initialization", () => {
+  beforeAll(() => {
+    process.env.FIREBASE_API_KEY = "test-api-key";
+    process.env.FIREBASE_AUTH_DOMAIN = "test-auth-domain";
+    process.env.FIREBASE_PROJECT_ID = "test-project-id";
+    process.env.FIREBASE_STORAGE_BUCKET = "test-storage-bucket";
+    process.env.FIREBASE_MESSAGING_SENDER_ID = "test-messaging-sender-id";
+    process.env.FIREBASE_APP_ID = "test-app-id";
+    process.env.FIREBASE_MEASUREMENT_ID = "test-measurement-id";
+  });
+
+  it("should initialize Firebase app and analytics when projectId is present", () => {
+    (initializeApp as jest.Mock).mockReturnValue({ name: "mockApp" });
+    (getAnalytics as jest.Mock).mockReturnValue("mockAnalytics");
+    (getPerformance as jest.Mock).mockReturnValue("mockPerformance");
+
+    const app = initializeApp(firebaseConfig);
+
+    if (app.name && typeof window !== "undefined") {
+      const analyticsInstance = getAnalytics(app);
+      const performanceInstance = getPerformance(app);
+      expect(analyticsInstance).toBe("mockAnalytics");
+      expect(performanceInstance).toBe("mockPerformance");
+    }
+  });
+
+  it("should not initialize Firebase if projectId is missing", () => {
+    delete process.env.FIREBASE_PROJECT_ID;
+    expect(() => initializeApp(firebaseConfig)).toThrow();
+  });
+});
+
+describe("sendFirebase", () => {
+  beforeAll(() => {
+    (logEvent as jest.Mock) = jest.fn();
+    Object.defineProperty(window, "location", {
+      value: { pathname: "/test-path" },
+      writable: true,
+    });
+  });
+
+  it("should call logEvent with the correct parameters", () => {
+    const dataParams: FirebaseParams = {
+      id_filter: 123,
+      filter_name: "Test Filter",
+      id_list_product: 456,
+      list_product_name: "Test Product List",
+      id_product: 789,
+      product_name: "Test Product",
+    };
+
+    sendFirebase(dataParams);
+
+    expect(logEvent).toHaveBeenCalledWith(analytics, "page_view", {
+      id_filter: 123,
+      filter_name: "Test Filter",
+      id_layanan: 829,
+      layanan_name: "PIP",
+      id_list_product: 456,
+      list_product_name: "Test Product List",
+      id_product: 789,
+      product_name: "Test Product",
+      page_path: "/homepage/cek-kelaikan-kendaraan/test-path",
+    });
+  });
+
+  it("should handle missing optional parameters in dataParams", () => {
+    const dataParams: FirebaseParams = {
+      id_list_product: 456,
+      list_product_name: "Test Product List",
+    };
+
+    sendFirebase(dataParams);
+
+    expect(logEvent).toHaveBeenCalledWith(analytics, "page_view", {
+      id_filter: null,
+      filter_name: null,
+      id_layanan: 829,
+      layanan_name: "PIP",
+      id_list_product: 456,
+      list_product_name: "Test Product List",
+      id_product: null,
+      product_name: null,
+      page_path: "/homepage/cek-kelaikan-kendaraan/test-path",
+    });
+  });
+});

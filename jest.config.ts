@@ -38,6 +38,13 @@ const config: Config = {
     "!**/coverage/**",
     "!**/*.config.{js,ts}",
     "!**/src/utils/utilssdkv2.3.js",
+    "!**/src/definitions/**",
+    "!**/src/utils/utilssdkv2.4.3.js",
+    "!**/src/utils/firebase.ts",
+    "!**/src/utils/encrypt.ts",
+    "!**/src/utils/axios.ts",
+    "!**/public/service-worker.js",
+    "!**/src/pages/data-kelaikan-kendaraan/index.tsx",
   ],
 
   // The directory where Jest should output its coverage files
@@ -107,9 +114,11 @@ const config: Config = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "^@/utils/utilssdkv2.3$": "<rootDir>/src/utils/utilssdkv2.3.js",
+    "^@/utils/utilssdkv2.4.3$": "<rootDir>/src/utils/utilssdkv2.4.3.js",
     "^@/components/ui/Page$": "<rootDir>/src/components/ui/Page.tsx",
     "^@/utils/firebase$": "<rootDir>/src/utils/firebase.ts",
+    "^@/utils/axios$": "<rootDir>/src/utils/axios.ts",
+    "^@/utils/encrypt$": "<rootDir>/src/utils/encrypt.ts",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

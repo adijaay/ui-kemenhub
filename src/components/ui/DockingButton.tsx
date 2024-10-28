@@ -30,10 +30,11 @@ export default function DockingButton({
       {button ? (
         <button
           // eslint-disable-next-line react/button-has-type
+          data-testid="docking-button"
           type={type}
           disabled={!active}
           onClick={onClick}
-          className={`flex w-full items-center justify-center rounded-xl ${active ? "bg-text-primary text-white" : "pointer-events-none bg-tertiary-fill text-tertiary-text"} h-12 text-center text-sm font-semibold`}
+          className={`flex w-full items-center justify-center rounded-xl ${active ? "bg-text-primary text-white" : "bg-tertiary-fill text-tertiary-text pointer-events-none"} h-12 text-center text-sm font-semibold`}
         >
           {text}
         </button>
@@ -42,7 +43,7 @@ export default function DockingButton({
           aria-disabled={!active}
           tabIndex={active ? 0 : -1}
           href={link}
-          className={`flex w-full items-center justify-center rounded-xl ${active ? "bg-text-primary text-white" : "pointer-events-none bg-tertiary-fill text-tertiary-text"} h-12 text-center text-sm font-semibold`}
+          className={`flex w-full items-center justify-center rounded-xl ${active ? "bg-text-primary text-white" : "bg-tertiary-fill text-tertiary-text pointer-events-none"} h-12 text-center text-sm font-semibold`}
         >
           {text}
         </Link>

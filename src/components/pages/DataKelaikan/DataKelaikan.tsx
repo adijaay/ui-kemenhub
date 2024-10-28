@@ -111,7 +111,7 @@ export default function DataKelaikan() {
             <IconChevronRight
               width={16}
               height={16}
-              stroke-width="2.25"
+              strokeWidth="2.25"
               className="pb-0.25"
               color="#2871FF"
             />

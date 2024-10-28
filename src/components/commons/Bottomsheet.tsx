@@ -29,6 +29,7 @@ export default function Bottomsheet({
   return (
     <>
       <div
+        data-testid="bottomsheet"
         onClick={() => setShow(false)}
         className={`fixed left-0 top-0 z-20 h-screen w-screen bg-[#1018287A] ${isShow ? "visible opacity-100" : "invisible opacity-0"} duration-300`}
       />
@@ -38,12 +39,13 @@ export default function Bottomsheet({
         <div className="flex w-full items-center justify-between">
           <p className="text-base font-semibold text-[#212121]">{title}</p>
           <IconX
+            data-testid="close-icon"
             color="#182230"
             width={24}
             height={24}
             cursor={"pointer"}
             onClick={() => setShow(false)}
-            stroke-width="2.5"
+            strokeWidth="2.5"
           />
         </div>
 

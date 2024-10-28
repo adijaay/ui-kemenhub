@@ -18,7 +18,7 @@ const ErrorState: React.FC<IErrorState> = ({
   image = "/assets/notfound.png",
 }) => {
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-4 px-4 bg-white text-text-primary">
+    <div className="flex h-screen flex-col items-center justify-center gap-4 bg-white px-4 text-text-primary">
       <div
         className={"-mt-[83px] flex flex-col items-center justify-center gap-4"}
       >
