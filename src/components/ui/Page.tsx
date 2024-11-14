@@ -1,7 +1,5 @@
-/* eslint-disable no-console */
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-import UtilsSDK from "@/utils/utilssdkv2.4.3";
+import UtilsSDK from "@/utils/utilssdkv2.4.4";
 
 interface IPage {
   children: React.ReactNode;
@@ -21,25 +19,18 @@ export default function Page({
   useEffect(() => {
     const sdk = new UtilsSDK();
 
-    sdk.setTitle(pageTitle).catch((err) => {
-      throw err;
-    });
+    sdk.setTitle(pageTitle).catch((err) => {console.error(err);});
 
     if (homePage) {
-      sdk.clearHistory().catch((err) => {
-        throw err;
-      });
+      sdk.clearHistory().catch((err) => {console.error(err);});
     } else {
       if (onBackLink) {
-        sdk.onBack("custom", `location.href="${onBackLink}"`).catch((err) => {
-          throw err;
-        });
+        sdk.onBack("custom", `location.href="${onBackLink}"`).catch((err) => {console.error(err);});
       } else if (onBackCustom) {
-        sdk.onBack("custom", `${onBackCustom}`).catch((err) => {
-          throw err;
-        });
+        sdk.onBack("custom", `${onBackCustom}`).catch((err) => {console.error(err);});
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

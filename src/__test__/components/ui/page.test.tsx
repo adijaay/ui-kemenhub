@@ -4,7 +4,7 @@ import "@testing-library/jest-dom";
 // import UtilsSDK from "@/utils/utilssdkv2.4.3";
 import Page from "@/components/ui/Page";
 
-jest.mock("@/utils/utilssdkv2.4.3", () => {
+jest.mock("@/utils/utilssdkv2.4.4", () => {
   return jest.fn().mockImplementation(() => ({
     setTitle: jest.fn().mockResolvedValue(null),
     clearHistory: jest.fn().mockResolvedValue(null),

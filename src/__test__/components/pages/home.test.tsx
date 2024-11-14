@@ -8,7 +8,7 @@ jest.mock("next/router", () => ({
   })),
 }));
 
-jest.mock("@/utils/utilssdkv2.4.3", () => ({
+jest.mock("@/utils/utilssdkv2.4.4", () => ({
   __esModule: true,
   default: jest.fn(() => ({
     setTitle: jest.fn(() => Promise.resolve()),

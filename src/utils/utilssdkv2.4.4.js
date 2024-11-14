@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // script ini berfungsi untuk komunkasi antara MiniApp dan MainApp
 export default class UtilsSDK {
   constructor() {
@@ -12,7 +9,8 @@ export default class UtilsSDK {
     }
     window.addEventListener(
       "flutterInAppWebViewPlatformReady",
-      async function (event) {},
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+      async function (event) {}
     );
   }
   async callHandler(
@@ -23,8 +21,18 @@ export default class UtilsSDK {
     arg4 = null,
     arg5 = null,
     arg6 = null,
+    arg7 = null
   ) {
-    return await this.handlerMobile(method, arg1, arg2, arg3, arg4, arg5, arg6);
+    return await this.handlerMobile(
+      method,
+      arg1,
+      arg2,
+      arg3,
+      arg4,
+      arg5,
+      arg6,
+      arg7
+    );
 
     // ON DEV
     // if (typeof window.flutter_inappwebview != "undefined"){ // if mobile
@@ -43,28 +51,28 @@ export default class UtilsSDK {
     arg4 = null,
     arg5 = null,
     arg6 = null,
+    arg7 = null
   ) {
-    return new Promise((resolve, reject) => {
-      const callHandler = async () => {
-        try {
-          var _callback = await window.flutter_inappwebview.callHandler(
-            "handlerFunc",
-            method,
-            arg1,
-            arg2,
-            arg3,
-            arg4,
-            arg5,
-            arg6,
-          );
-          resolve(_callback);
-        } catch (e) {
-          console.log(method, "must run in mobile app ina-digital");
-          reject(null);
-        }
-      };
-
-      callHandler();
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      try {
+        var _callback = await window.flutter_inappwebview.callHandler(
+          "handlerFunc",
+          method,
+          arg1,
+          arg2,
+          arg3,
+          arg4,
+          arg5,
+          arg6,
+          arg7
+        );
+        resolve(_callback);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(method, "must run in mobile app ina-digital");
+        reject(null);
+      }
     });
   }
 
@@ -190,6 +198,11 @@ export default class UtilsSDK {
     return await this.callHandler("getCurrentLocation");
   }
 
+  // Get IP MainApp
+  async getIpMainapp() {
+    return await this.callHandler("getIpMainapp");
+  }
+
   // open external browser
   async openBrowser(url) {
     return await this.callHandler("openBrowser", url);
@@ -265,6 +278,7 @@ export default class UtilsSDK {
   //     isLoading: false, // show loading in modal (default: false)
   //     dismissible: true, // user can close modal on click outside modal & click back button (default: true)
   //     enableCloseButton: true, // show close button in modal (default: true)
+  //     customIconUrl: 'https://e7.pngegg.com/pngimages/727/738/png-clipart-computer-icons-question-mark-icon-design-asking-miscellaneous-text.png',
   //     customButton: [ // add multiple custom button inside modal
   //         {
   //             text: "Custom Button - 1", // label button
@@ -282,6 +296,7 @@ export default class UtilsSDK {
     var dismissible = true;
     var enableCloseButton = true;
     var customButton = [];
+    var customIconUrl = null;
     if (typeof args.isLoading != "undefined") {
       isLoading = args.isLoading;
     }
@@ -294,6 +309,9 @@ export default class UtilsSDK {
     if (typeof args.customButton != "undefined") {
       customButton = args.customButton;
     }
+    if (typeof args.customIconUrl != "undefined") {
+      customIconUrl = args.customIconUrl;
+    }
     return await this.callHandler(
       type,
       title,
@@ -302,6 +320,7 @@ export default class UtilsSDK {
       dismissible,
       enableCloseButton,
       customButton,
+      customIconUrl
     );
   }
 
@@ -316,6 +335,9 @@ export default class UtilsSDK {
   // /profile = MainApp profile pages (auth & prod mode)
   // /riwayat = MainApp riwayat pages (auth)
   // /login = MainApp login pages (no-auth & prod mode)
+  // /faq = MainApp faq pages (no-auth & prod mode)
+  // /chat = MainApp chat pages (no-auth & prod mode)
+  // /form_pengaduan = MainApp chat pages (no-auth & prod mode)
   async toMainApp(pages = "/home") {
     return await this.callHandler("toMainApp", pages);
   }
