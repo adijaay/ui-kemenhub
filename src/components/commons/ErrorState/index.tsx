@@ -28,7 +28,7 @@ const ErrorState: React.FC<IErrorState> = ({
             {title}
           </div>
           {subtitle ? (
-            <div className="text-center text-sm font-normal leading-5">
+            <div data-testid="subtitle" className="text-center text-sm font-normal leading-5">
               {subtitle}
             </div>
           ) : undefined}
