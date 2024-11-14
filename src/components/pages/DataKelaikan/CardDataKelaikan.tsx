@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Container from "@/components/ui/Container";
 import Chip from "@/components/ui/Chip";
 import { formatDate, isDateExpired } from "@/utils/utils";
 import CardLoadingDataKelaikan from "./CardLoadingDataKelaikan";
 import { TDataKendaraan } from "@/definitions/vehicle";
+import { useMemo } from "react";
 
 interface ICardDataKelaikan {
   vehicleIdentity: string;
@@ -19,6 +21,14 @@ export default function CardDataKelaikan({
   error,
   isLoading,
 }: ICardDataKelaikan) {
+  const isIzinAngkutan = useMemo(() => {
+    return isSuccess || data.data_spionam.tgl_exp_kps;
+  }, [data.data_spionam.tgl_exp_kps]);
+
+  const isUjiBerkala = useMemo(() => {
+    return isSuccess || data.data_blue.masa_berlaku;
+  }, [data.data_blue.masa_berlaku]);
+
   return (
     <>
       {isLoading ? (
@@ -57,7 +67,7 @@ export default function CardDataKelaikan({
               </p>
             </div>
 
-            {isSuccess ? (
+            {isIzinAngkutan ? (
               <Chip
                 type={
                   isDateExpired(data?.data_spionam?.tgl_exp_kps.split(" ")[0])
@@ -116,7 +126,7 @@ export default function CardDataKelaikan({
               </p>
             </div>
 
-            {isSuccess ? (
+            {isUjiBerkala ? (
               <Chip
                 type={
                   isDateExpired(data?.data_blue?.masa_berlaku.split(" ")[0])
