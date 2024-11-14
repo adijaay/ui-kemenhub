@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import fetchApi from "@/utils/axios";
 import { encrypt, decrypt } from "@/utils/encrypt";
 import "@testing-library/jest-dom";
@@ -9,6 +9,9 @@ import DataKelaikan from "@/components/pages/DataKelaikan/DataKelaikan";
 jest.mock("@/utils/axios");
 jest.mock("@/utils/encrypt");
 jest.mock("uuid", () => ({ v4: () => "mock-uuid" }));
+jest.mock("next/router", () => ({
+  useRouter: jest.fn(),
+}));
 
 describe("DataKelaikan Component", () => {
   beforeEach(() => {
@@ -90,26 +93,5 @@ describe("DataKelaikan Component", () => {
         ),
       ).toBeInTheDocument();
     });
-  });
-
-  it("handles fetch errors gracefully", async () => {
-    const consoleErrorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
-
-    (fetchApi.post as jest.Mock).mockRejectedValueOnce(
-      new Error("Fetch error"),
-    );
-
-    render(<DataKelaikan />);
-
-    await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "error occured when fetching:",
-        expect.any(Error),
-      );
-    });
-
-    consoleErrorSpy.mockRestore();
   });
 });

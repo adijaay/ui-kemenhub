@@ -11,7 +11,7 @@ import {
 
 interface INotifikasi extends React.HTMLAttributes<HTMLDivElement> {
   isShow: boolean;
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setShow?: React.Dispatch<React.SetStateAction<boolean>>;
   closeable?: boolean;
   title?: string;
   message: string;
@@ -75,6 +75,12 @@ export default function Notifikasi({
     }
   };
 
+  const handleClose = () => {
+    if (!isShow || !setShow) return;
+
+    setShow(false);
+  };
+
   useEffect(() => {
     if (isShow) {
       setIsShaking(true);
@@ -106,7 +112,7 @@ export default function Notifikasi({
             {closeable && (
               <IconX
                 data-testid="icon-close"
-                onClick={() => setShow(false)}
+                onClick={handleClose}
                 size={12}
                 color="#182230"
                 className="shrink-0"

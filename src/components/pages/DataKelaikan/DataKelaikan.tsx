@@ -1,18 +1,18 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import CardDataKelaikan from "./CardDataKelaikan";
 import Notifikasi from "@/components/commons/Notifikasi";
 import { IconChevronRight } from "@tabler/icons-react";
 import Bottomsheet from "@/components/commons/Bottomsheet";
-import { getCookie } from "@/utils/utils";
-import { decrypt, encrypt } from "@/utils/encrypt";
-import { v4 as uuidv4 } from "uuid";
-import fetchApi from "@/utils/axios";
+import { decrypt } from "@/utils/encrypt";
 import { defaultData } from "@/constants/vehicle";
 import { TEncResponseData, TResponseData } from "@/definitions/vehicle";
+import { AxiosError } from "axios";
+import { fetchDataKendaraan } from "@/hooks/fetch";
+import { useRouter } from "next/router";
 
 export default function DataKelaikan() {
+  const router = useRouter();
+
   const [vehicleNumber, setVehicleNumber] = useState<string>("");
   const [showBottomSheet, setShowBottomSheet] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -24,37 +24,11 @@ export default function DataKelaikan() {
     error: "",
   });
 
-  const fetchData = async (no_reg_kendaraan: string | string[]) => {
+  const fetchData = async (no_reg_kendaraan: string | string[]): Promise<TEncResponseData> => {
     setIsFetching(true);
 
-    const token = getCookie("inaku_token");
-    const formData = new FormData();
-    const formBody = {
-      no_reg_kendaraan,
-    };
-
-    const encryptedData = encrypt(formBody);
-    if (typeof encryptedData === "string") {
-      formData.append("data", encryptedData);
-    } else {
-      throw new Error("Encryption failed, expected a string.");
-    }
-
-    try {
-      const response = await fetchApi.post("/v1/layak-jalan", formData, {
-        headers: {
-          token: token,
-          "Content-Type": "multipart/form-data",
-          "X-Request-ID": uuidv4(),
-        },
-      });
-
-      const { data } = response;
-
-      return data;
-    } catch (err) {
-      console.error("error occured when fetching:", err);
-    }
+    const responseData = await fetchDataKendaraan(no_reg_kendaraan);
+    return responseData;
   };
 
   useEffect(() => {
@@ -62,16 +36,15 @@ export default function DataKelaikan() {
     const vehicleNumber = window.localStorage.getItem("vehicleNumber");
     const vehicleCode = window.localStorage.getItem("vehicleCode");
 
-    const no_reg_vehicle = `${vehicleCity}${vehicleNumber}${vehicleCode}`;
+    if (vehicleCity && vehicleNumber && vehicleCode) {
+      const no_reg_vehicle = `${vehicleCity}${vehicleNumber}${vehicleCode}`;
 
-    if (no_reg_vehicle) {
       setVehicleNumber(`${vehicleCity} ${vehicleNumber} ${vehicleCode}`);
 
       fetchData(no_reg_vehicle)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .then((response: TEncResponseData) => {
           const decryptData = decrypt(response.data);
-
+          
           setDataKendaraan({
             success: response.success,
             message: response.message,
@@ -79,8 +52,17 @@ export default function DataKelaikan() {
             error: response.error,
           });
         })
-        .catch((err) => {
-          console.error("error occured in useEffect:", err);
+        .catch((err: AxiosError | unknown) => {
+          if (err instanceof AxiosError) {
+            switch (err.response?.status) {
+              case 408:
+                router.push("/408");
+                return;
+              case 500:
+                router.push("/500");
+                return;
+            }
+          }
         })
         .finally(() => {
           setIsFetching(false);
@@ -88,8 +70,11 @@ export default function DataKelaikan() {
     }
 
     return () => {
-      window.localStorage.removeItem("data");
+      window.localStorage.removeItem("vehicleCity");
+      window.localStorage.removeItem("vehicleNumber");
+      window.localStorage.removeItem("vehicleCode");
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -97,7 +82,6 @@ export default function DataKelaikan() {
       {!isFetching ? (
         <Notifikasi
           isShow
-          setShow={() => {}}
           status="info"
           message="Informasi yang ditampilkan di bawah ini berasal dari HUBNET."
         >

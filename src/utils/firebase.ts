@@ -20,8 +20,6 @@ let perf: any;
 if (firebaseConfig?.projectId) {
   const app = initializeApp(firebaseConfig);
 
-  console.log("appName:", app.name);
-
   if (app.name && typeof window !== "undefined") {
     analytics = getAnalytics(app);
     perf = getPerformance(app);

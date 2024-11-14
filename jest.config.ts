@@ -37,9 +37,8 @@ const config: Config = {
     "!**/package/**",
     "!**/coverage/**",
     "!**/*.config.{js,ts}",
-    "!**/src/utils/utilssdkv2.3.js",
     "!**/src/definitions/**",
-    "!**/src/utils/utilssdkv2.4.3.js",
+    "!**/src/utils/utilssdkv2.4.4.js",
     "!**/src/utils/firebase.ts",
     "!**/src/utils/encrypt.ts",
     "!**/src/utils/axios.ts",
@@ -119,6 +118,7 @@ const config: Config = {
     "^@/utils/firebase$": "<rootDir>/src/utils/firebase.ts",
     "^@/utils/axios$": "<rootDir>/src/utils/axios.ts",
     "^@/utils/encrypt$": "<rootDir>/src/utils/encrypt.ts",
+    "^@/utils/utils$": "<rootDir>/src/utils/utils.ts",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

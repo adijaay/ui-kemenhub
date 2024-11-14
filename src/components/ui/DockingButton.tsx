@@ -29,9 +29,9 @@ export default function DockingButton({
       {children}
       {button ? (
         <button
-          // eslint-disable-next-line react/button-has-type
           data-testid="docking-button"
-          type={type}
+          // eslint-disable-next-line react/button-has-type
+          type={type as IButtonNext["type"]}
           disabled={!active}
           onClick={onClick}
           className={`flex w-full items-center justify-center rounded-xl ${active ? "bg-text-primary text-white" : "bg-tertiary-fill text-tertiary-text pointer-events-none"} h-12 text-center text-sm font-semibold`}
