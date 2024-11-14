@@ -15,7 +15,7 @@ export default function DataKelaikan() {
 
   const [vehicleNumber, setVehicleNumber] = useState<string>("");
   const [showBottomSheet, setShowBottomSheet] = useState<boolean>(false);
-  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(true);
 
   const [dataKendaraan, setDataKendaraan] = useState<TResponseData>({
     success: false,
