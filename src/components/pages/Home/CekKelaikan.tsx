@@ -218,7 +218,7 @@ export default function CekKelaikan() {
         data-testid="cekKelaikan"
         text={isSubmitting ? <SpinnerLoading /> : "Cek"}
         onClick={submitHandler}
-        disabled={isSubmitting || !vehicleCity.data || !vehicleNumber.data}
+        disabled={isSubmitting || !vehicleCity.data || !vehicleNumber.data || !vehicleCode.data}
       />
     </Container>
   );
