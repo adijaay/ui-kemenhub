@@ -18,7 +18,7 @@ export default function DataKelaikan() {
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
   const [dataKendaraan, setDataKendaraan] = useState<TResponseData>({
-    success: false,
+    success: null,
     message: "",
     data: defaultData,
     error: "",
@@ -61,6 +61,11 @@ export default function DataKelaikan() {
               case 500:
                 router.push("/500");
                 return;
+              case 404:
+                setDataKendaraan({
+                  ...dataKendaraan,
+                  success: false,
+                });
             }
           }
         })

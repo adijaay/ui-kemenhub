@@ -26,7 +26,7 @@ export type TDataKendaraan = {
 };
   
 export type TResponseData = {
-  success: boolean;
+  success: boolean | null;
   message: string;
   data: TDataKendaraan;
   error: string;

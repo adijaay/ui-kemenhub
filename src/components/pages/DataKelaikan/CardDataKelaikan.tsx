@@ -4,12 +4,13 @@ import Chip from "@/components/ui/Chip";
 import { formatDate, isDateExpired } from "@/utils/utils";
 import CardLoadingDataKelaikan from "./CardLoadingDataKelaikan";
 import { TDataKendaraan } from "@/definitions/vehicle";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import sendFirebase from "@/utils/firebase";
 
 interface ICardDataKelaikan {
   vehicleIdentity: string;
   data: TDataKendaraan;
-  isSuccess: boolean;
+  isSuccess: boolean | null;
   error: string;
   isLoading: boolean;
 }
@@ -28,6 +29,16 @@ export default function CardDataKelaikan({
   const isUjiBerkala = useMemo(() => {
     return isSuccess || data.data_blue.masa_berlaku;
   }, [data.data_blue.masa_berlaku]);
+
+  useEffect(() => {
+    if (typeof isSuccess == "boolean") {
+      sendFirebase({
+        id_list_product: isSuccess ? 100102 : 100103,
+        list_product_name: isSuccess ? "Hasil Pengecekan Found" : "Hasil Pengecekan Not Found",
+        page_title: "Cek Kelaikan Kendaraan",
+        page_path: `/homepage/cek-kelaikan-kendaraan/${isSuccess? "result-found" : "result-not-found"}`,
+      });}
+  }, [isSuccess]);
 
   return (
     <>

@@ -28,19 +28,17 @@ if (firebaseConfig?.projectId) {
 
 export { analytics, logEvent, perf };
 export default function sendFirebase(dataParams: FirebaseParams) {
-  const currentPagePath = window.location.pathname;
-  const router = `/homepage/cek-kelaikan-kendaraan${currentPagePath}`;
-
   const params: FirebaseParams = {
     id_filter: dataParams.id_filter || null,
     filter_name: dataParams.filter_name || null,
-    id_layanan: 829,
-    layanan_name: "PIP",
+    id_layanan: 1001,
+    layanan_name: "Cek Kelaikan Kendaraan Umum",
     id_list_product: dataParams.id_list_product,
     list_product_name: dataParams.list_product_name,
+    page_title: dataParams.page_title,
     id_product: dataParams.id_product || null,
     product_name: dataParams.product_name || null,
-    page_path: router,
+    page_path: dataParams.page_path,
   };
 
   logEvent(analytics, "page_view", params);
