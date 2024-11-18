@@ -15,7 +15,7 @@ export default function Container({
   return (
     <div
       data-testid="container"
-      className={`flex flex-col gap-4 ${rounded} border border-[#EAECF0] bg-white px-4 py-6 ${className}`}
+      className={`flex flex-col gap-4 ${rounded} border border-[#EAECF0] bg-white p-4 ${className}`}
       {...props}
     >
       {children}
