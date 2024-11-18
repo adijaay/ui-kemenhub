@@ -43,7 +43,7 @@ const config: Config = {
     "!**/src/utils/encrypt.ts",
     "!**/src/utils/axios.ts",
     "!**/public/service-worker.js",
-    "!**/src/pages/data-kelaikan-kendaraan/index.tsx",
+    "!**/src/pages/_app.tsx",
   ],
 
   // The directory where Jest should output its coverage files
