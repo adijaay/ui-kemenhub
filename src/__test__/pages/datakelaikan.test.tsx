@@ -7,6 +7,10 @@ jest.mock("next/router", () => ({
   useRouter: jest.fn(),
 }));
 
+jest.mock("firebase/performance", () => ({
+  getPerformance: jest.fn(),
+}));
+
 describe("Data Kelaikan Page", () => {
   it("should render correctly", () => {
     render(<DataKelaikanPage />);

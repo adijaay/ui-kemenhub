@@ -18,6 +18,10 @@ jest.mock("@/utils/utilssdkv2.4.4", () => ({
   })),
 }));
 
+jest.mock("firebase/performance", () => ({
+  getPerformance: jest.fn(),
+}));
+
 describe("Home Page", () => {
   it("should render notification correctly", () => {
     render(<Home />);
