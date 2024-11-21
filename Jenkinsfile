@@ -9,7 +9,7 @@ pipeline {
 
         //sesuaikan produk name dengan nama service #diisi team produk
         string(name: 'PRODUK', defaultValue:'ppp')
-        string(name: 'NAME_SERVICE', defaultValue: ui-kemenhub-fe')
+        string(name: 'NAME_SERVICE', defaultValue: 'ui-kemenhub-fe')
         string(name: 'KUBE_NAMESPACE', defaultValue: 'kemenhub')
         string(name: 'KUBE_DEPLOYMENT_NAME', defaultValue: 'ui-kemenhub')
 
