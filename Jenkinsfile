@@ -9,9 +9,9 @@ pipeline {
 
         //sesuaikan produk name dengan nama service #diisi team produk
         string(name: 'PRODUK', defaultValue:'ppp')
-        string(name: 'NAME_SERVICE', defaultValue: 'svc-status-bpjsks-be')
-        string(name: 'KUBE_NAMESPACE', defaultValue: 'bpjskes')
-        string(name: 'KUBE_DEPLOYMENT_NAME', defaultValue: 'svc-status')
+        string(name: 'NAME_SERVICE', defaultValue: ui-kemenhub-fe')
+        string(name: 'KUBE_NAMESPACE', defaultValue: 'kemenhub')
+        string(name: 'KUBE_DEPLOYMENT_NAME', defaultValue: 'kemenhub')
 
         //sesuaikan cluster name #konfirmasi ke team devops
         string(name: 'PRODUCTION_CLUSTER_NAME', defaultValue: 'aws-prod')
