@@ -11,7 +11,7 @@ pipeline {
         string(name: 'PRODUK', defaultValue:'ppp')
         string(name: 'NAME_SERVICE', defaultValue: ui-kemenhub-fe')
         string(name: 'KUBE_NAMESPACE', defaultValue: 'kemenhub')
-        string(name: 'KUBE_DEPLOYMENT_NAME', defaultValue: 'kemenhub')
+        string(name: 'KUBE_DEPLOYMENT_NAME', defaultValue: 'ui-kemenhub')
 
         //sesuaikan cluster name #konfirmasi ke team devops
         string(name: 'PRODUCTION_CLUSTER_NAME', defaultValue: 'aws-prod')
