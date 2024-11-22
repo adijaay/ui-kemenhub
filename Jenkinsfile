@@ -183,15 +183,10 @@ pipeline {
                         
                         deployImage.CreateEnvAWSDev("${CLUSTER_NAME}", "${NAMESPACE}", params.NAME_SERVICE)
 
-                        sh '''
-                        
-                            export $(grep -v '^#' .env | xargs)
-                            
-                            printenv | grep GIT_USERNAME
-                            
-                            docker build --build-arg GIT_TOKEN=$GIT_TOKEN --build-arg GIT_USERNAME=$GIT_USERNAME --no-cache -t $NAME_SERVICE:latest .
-                        
-                        '''
+                        sh "cat .env"
+
+                        sh "docker build --no-cache -t ${params.NAME_SERVICE}:latest ."
+
 
                     }
                     
