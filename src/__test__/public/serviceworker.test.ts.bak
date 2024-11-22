@@ -1,0 +1,72 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const cacheName = "offlineCacheV1";
+const offlinePages = [
+  "/offline.html",
+  "/assets/nointernet.png",
+  "/assets/nointernet.svg",
+  "/assets/notfoundgeneral.svg",
+  "/assets/servererrorgeneral.svg",
+  "/fonts/inter.ttf",
+  "/favicon.ico",
+];
+
+describe("Service Worker", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    global.caches = {
+      open: jest.fn().mockResolvedValue({
+        addAll: jest.fn(),
+      }),
+      keys: jest.fn().mockResolvedValue([cacheName]),
+      delete: jest.fn().mockResolvedValue(true),
+      match: jest.fn().mockResolvedValue(null),
+    } as any;
+  });
+
+  it("should open cache and cache offline pages on install", async () => {
+    const mockEvent = {
+      waitUntil: jest.fn((promise) => promise),
+    };
+    self.dispatchEvent(
+      new InstallEvent("install", mockEvent as ExtendableEvent)
+    );
+
+    await expect(global.caches.open).toHaveBeenCalledWith(cacheName);
+    const cache = await global.caches.open(cacheName);
+    expect(cache.addAll).toHaveBeenCalledWith(offlinePages);
+  });
+
+  it("should delete old caches on activate", async () => {
+    const mockEvent = {
+      waitUntil: jest.fn((promise) => promise),
+    };
+    global.caches.keys = jest.fn().mockResolvedValue(["oldCache", cacheName]);
+
+    self.dispatchEvent(
+      new ActivateEvent("activate", mockEvent as ExtendableEvent)
+    );
+
+    expect(global.caches.delete).toHaveBeenCalledWith("oldCache");
+    expect(global.caches.delete).not.toHaveBeenCalledWith(cacheName);
+  });
+
+  it("should return cached pages if fetch fails", async () => {
+    const mockFetchEvent = {
+      request: new Request("/some-page"),
+      respondWith: jest.fn(),
+    };
+
+    global.fetch = jest.fn().mockRejectedValue(new Error("Network error"));
+    global.caches.match = jest.fn().mockResolvedValue(
+      new Response("Cached page content")
+    );
+
+    self.dispatchEvent(
+      new FetchEvent("fetch", mockFetchEvent as FetchEventInit)
+    );
+
+    expect(mockFetchEvent.respondWith).toHaveBeenCalled();
+    const response = await global.caches.match(mockFetchEvent.request);
+    expect(response).toEqual(new Response("Cached page content"));
+  });
+});
