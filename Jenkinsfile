@@ -1,5 +1,6 @@
 @Library('shared-library')_
 def deployImage = new DeployImage()
+def devSecOps = new DevSecOps()
 
 env.DEPLOY = ""
 
@@ -18,8 +19,6 @@ pipeline {
         string(name: 'STAGING_CLUSTER_NAME', defaultValue: 'aws-stage')
         string(name: 'DEVELOPMENT_CLUSTER_NAME', defaultValue: 'aws-dev')
         string(name: 'DEFECTDOJO_ENGAGEMENT_ID', defaultValue: '3')
-
-
     }
 
     agent none
@@ -28,7 +27,7 @@ pipeline {
         skipDefaultCheckout()
     }
 
-    stages {
+ stages {
         
         stage('Kill Old Build') {
             steps {
@@ -69,7 +68,7 @@ pipeline {
                 stash(name: 'ws', includes: '**, ./commit-id')
             }
         }
-     
+
         stage('Secret Check') {
             parallel {
                 stage('Agent: docker (Node.js)') {
@@ -97,16 +96,12 @@ pipeline {
                     }
                     steps {
                         script {
-                            
-
-                            deployImage.GitleaksCheck()
-                            
+                            devSecOps.gitleaks(params.PRODUK,params.NAME_SERVICE)
                         }
                     }   
                 }
             }
         }
-
 
         stage('Static Application Security Testing (SAST)') {
             parallel {
@@ -133,75 +128,76 @@ pipeline {
                     }
                 }
 
-                stage('OWASP Dependency-Check Vulnerabilities') {
-                        agent { label 'Docker' }
-                        steps {
-                             unstash 'ws'
-                            script {
-
-                             deployImage.DependencyCheck()
-
-                            }
-                        }
-                }
-
-
-
+                // stage('OWASP Dependency-Check Vulnerabilities') {
+                //         agent { label 'Docker' }
+                //         steps {
+                //              unstash 'ws'
+                //             script {
+                //                 devSecOps.dependencyCheck(params.PRODUK,params.NAME_SERVICE)
+                //             }
+                //         }
+                // }
+            }    
         }
+          
+        stage('Build Docker') {
+            agent { label 'Docker' }
+                steps {
+                    unstash 'ws'
+                    script {
+                    env.nodeName = env.NODE_NAME
+                    
 
-            
-        }
-                stage('Build Docker') {
-                        agent { label 'Docker' }
-                        steps {
-                            unstash 'ws'
-                            script {
-                            env.nodeName = env.NODE_NAME
-                           
+                    def inputCHOICES
+                    timeout(2) {
+                        userInput = input(
+                            id: 'userInput', message: 'Pilih Environment :?',
+                            parameters: [
+                                    
+                                choice(name: 'DEPLOY', choices: ['true', 'false',], description: 'lanjukan proses build ?') ,
+                                choice(name: 'ENV', choices: ['aws', 'flou',], description: 'pilih environment registry')  
+                                                     
+                            ]
+                        )
+                    }
+                   
+                    env.ENV  = userInput.ENV
+                    env.DEPLOY = userInput.DEPLOY
 
-                            def inputCHOICES
-                            timeout(2) {
-                                userInput = input(
-                                    id: 'userInput', message: 'Pilih Environment :?',
-                                    parameters: [
-                                            
-                                            choice(name: 'DEPLOY', choices: ['true', 'false',], description: 'lanjukan proses build ?') ,
-                                            choice(name: 'ENV', choices: ['aws', 'flou',], description: 'pilih environment registry')                        
-                                    ]
-                                )
-                            }
-                            
-                            env.ENV  = userInput.ENV
+                    if ( DEPLOY == 'false' ) {
+                        echo "skip"
+                    } else {
+                        if( env.BRANCH_NAME == 'development' ){
+                            CLUSTER_NAME = "${params.DEVELOPMENT_CLUSTER_NAME}"
+                            echo "${CLUSTER_NAME}"
 
-                            echo "${userInput}"
-                            env.DEPLOY = userInput.DEPLOY
-                            if ( DEPLOY == 'false' ) {
-                                echo "skip"
-                            } else {
-                                // if( env.BRANCH_NAME == 'development' ){
-                                //    CLUSTER_NAME = "${params.DEVELOPMENT_CLUSTER_NAME}"
-                                //    echo "${CLUSTER_NAME}"
+                        } else if(env.BRANCH_NAME == 'staging') {
+                            CLUSTER_NAME = "${params.STAGING_CLUSTER_NAME}"
+                            echo "${CLUSTER_NAME}"
 
-                                // } else if(env.BRANCH_NAME == 'staging') {
-                                //    CLUSTER_NAME = "${params.STAGING_CLUSTER_NAME}"
-                                //    echo "${CLUSTER_NAME}"
-
-                                // } else if (env.BRANCH_NAME == 'main') {
-                                //    CLUSTER_NAME = "${params.PRODUCTION_CLUSTER_NAME}"
-                                //    echo "${CLUSTER_NAME}"
-                                     
-                                // }
+                        } else if (env.BRANCH_NAME == 'main') {
+                            CLUSTER_NAME = "${params.PRODUCTION_CLUSTER_NAME}"
+                            echo "${CLUSTER_NAME}"
                                 
-                                //  deployImage.CreateEnvAWSDev("${CLUSTER_NAME}", "${NAMESPACE}", params.NAME_SERVICE)
-                                // sh "cat .env" // Debug
-
-                                //  deployImage.CreateEnvAWSDev("aws-stage", "ppp-staging", "ui-vaksin-covid-fe")
-                                sh "docker build --no-cache -t ${params.NAME_SERVICE}:latest ."
-                            }
-                            
                         }
+                        
+                        deployImage.CreateEnvAWSDev("${CLUSTER_NAME}", "${NAMESPACE}", params.NAME_SERVICE)
+
+                        sh '''
+                        
+                            export $(grep -v '^#' .env | xargs)
+                            
+                            printenv | grep GIT_USERNAME
+                            
+                            docker build --build-arg GIT_TOKEN=$GIT_TOKEN --build-arg GIT_USERNAME=$GIT_USERNAME --no-cache -t $NAME_SERVICE:latest .
+                        
+                        '''
+
+                    }
+                    
                 }
             }
+        }
        
         stage('Dynamic Application Security Testing (DAST)') {
             parallel {
@@ -218,12 +214,12 @@ pipeline {
                     steps {
                         script {
                             if( env.DEPLOY == 'false' ){
-                            echo "skip"
+                                echo "skip"
 
                             }else  {
-                            script {
-                                deployImage.Tryvy()
-                            }
+                                script {
+                                    devSecOps.scanImage(params.PRODUK,params.NAME_SERVICE,params.NAME_SERVICE)
+                                }
 
                             }
                             
@@ -233,34 +229,32 @@ pipeline {
             }
         }
 
-       stage('Push to AWS ECR') {
+        stage('Push to AWS ECR') {
             agent { label "${env.nodeName}" }
 
-            
-            
             steps {
 
                 script {
                     if ( env.DEPLOY == 'false' ){
-                    echo "skip"
+                        echo "skip"
                     } else {
-                    if( env.BRANCH_NAME == 'development' ){
-                     
-                        deployImage.pushEcrAWSPPPStage(params.STAGING_CLUSTER_NAME, "${NAMESPACE}",params.NAME_SERVICE, "${commitId}", params.KUBE_NAMESPACE, params.KUBE_DEPLOYMENT_NAME)
-
-                    } else if(env.BRANCH_NAME == 'staging') {
-
-                        if(env.ENV == 'aws'){
+                        if( env.BRANCH_NAME == 'development' ){
+                        
                             deployImage.pushEcrAWSPPPStage(params.STAGING_CLUSTER_NAME, "${NAMESPACE}",params.NAME_SERVICE, "${commitId}", params.KUBE_NAMESPACE, params.KUBE_DEPLOYMENT_NAME)
-                        } else if(env.ENV == 'flou'){
-                            deployImage.pushFlouPPPStage("flou-stage", "${NAMESPACE}",params.NAME_SERVICE, "${commitId}", params.KUBE_NAMESPACE, params.KUBE_DEPLOYMENT_NAME)
-                        }
-                         
 
-                    } else if (env.BRANCH_NAME == 'main') {
-                       
-                        deployImage.pushEcrAWSPPPStage(params.STAGING_CLUSTER_NAME, "${NAMESPACE}",params.NAME_SERVICE, "${commitId}", params.KUBE_NAMESPACE, params.KUBE_DEPLOYMENT_NAME)
-                    }
+                        } else if(env.BRANCH_NAME == 'staging') {
+
+                            if(env.ENV == 'aws'){
+                                deployImage.pushEcrAWSPPPStage(params.STAGING_CLUSTER_NAME, "${NAMESPACE}",params.NAME_SERVICE, "${commitId}", params.KUBE_NAMESPACE, params.KUBE_DEPLOYMENT_NAME)
+                            } else if(env.ENV == 'flou'){
+                                deployImage.pushFlouPPPStage("flou-stage", "${NAMESPACE}",params.NAME_SERVICE, "${commitId}", params.KUBE_NAMESPACE, params.KUBE_DEPLOYMENT_NAME)
+                            }
+                            
+
+                        } else if (env.BRANCH_NAME == 'main') {
+                        
+                            deployImage.pushEcrAWSPPPStage(params.STAGING_CLUSTER_NAME, "${NAMESPACE}",params.NAME_SERVICE, "${commitId}", params.KUBE_NAMESPACE, params.KUBE_DEPLOYMENT_NAME)
+                        }
                     }                    
                 }
             }
@@ -272,11 +266,7 @@ pipeline {
        always {
 
            node('Docker') {
-
-              
-            echo "Sending notification"
-
-            // TelegramNotif(currentBuild.currentResult)
+                echo "Sending notification"
            }
        }
 
