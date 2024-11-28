@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import UtilsSDK from "@/utils/utilssdkv2.4.4";
 
@@ -19,15 +21,15 @@ export default function Page({
   useEffect(() => {
     const sdk = new UtilsSDK();
 
-    sdk.setTitle(pageTitle).catch((err) => console.log("Skip setTitle"));
+    sdk.setTitle(pageTitle).catch(() => console.log("Skip setTitle"));
 
     if (homePage) {
-      sdk.clearHistory().catch((err) => console.log("Skip clearHistory"));
+      sdk.clearHistory().catch(() => console.log("Skip clearHistory"));
     } else {
       if (onBackLink) {
-        sdk.onBack("custom", `location.href="${onBackLink}"`).catch((err) => console.log("Skip onBack"));
+        sdk.onBack("custom", `location.href="${onBackLink}"`).catch(() => console.log("Skip onBack"));
       } else if (onBackCustom) {
-        sdk.onBack("custom", `${onBackCustom}`).catch((err) => console.log("Skip onBack"));
+        sdk.onBack("custom", `${onBackCustom}`).catch(() => console.log("Skip onBack"));
       }
     }
   }, []);
