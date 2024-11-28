@@ -19,18 +19,17 @@ export default function Page({
   useEffect(() => {
     const sdk = new UtilsSDK();
 
-    sdk.setTitle(pageTitle).catch((err) => {console.error(err);});
+    sdk.setTitle(pageTitle).catch((err) => console.log("Skip setTitle"));
 
     if (homePage) {
-      sdk.clearHistory().catch((err) => {console.error(err);});
+      sdk.clearHistory().catch((err) => console.log("Skip clearHistory"));
     } else {
       if (onBackLink) {
-        sdk.onBack("custom", `location.href="${onBackLink}"`).catch((err) => {console.error(err);});
+        sdk.onBack("custom", `location.href="${onBackLink}"`).catch((err) => console.log("Skip onBack"));
       } else if (onBackCustom) {
-        sdk.onBack("custom", `${onBackCustom}`).catch((err) => {console.error(err);});
+        sdk.onBack("custom", `${onBackCustom}`).catch((err) => console.log("Skip onBack"));
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
