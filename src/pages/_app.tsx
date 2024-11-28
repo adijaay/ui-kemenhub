@@ -6,6 +6,7 @@ import Head from "next/head";
 import "@/styles/notifikasi.css";
 import NetworkProvider from "@/hooks/useCheckNetwork";
 import { useEffect } from "react";
+import DatadogInit from "@/providers/datadogs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function MyApp({ Component, pageProps }: AppPropsType) {
 
   return (
     <>
+      <DatadogInit />
       <Head>
         <meta
           name="viewport"
