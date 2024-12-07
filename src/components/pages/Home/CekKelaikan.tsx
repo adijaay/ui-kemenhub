@@ -106,8 +106,6 @@ export default function CekKelaikan() {
         } else {
           console.error(error);
         }
-      } finally {
-        setIsSubmitting(false);
       }
     }
   };
