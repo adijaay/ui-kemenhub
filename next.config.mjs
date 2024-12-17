@@ -28,6 +28,11 @@ const nextConfig = {
   },
   basePath: process.env.BASE_PATH,
   assetPrefix: process.env.BASE_PATH,
+  compiler: {
+    removeConsole: {
+      exclude: ["error"],
+    },
+  },
 };
 
 export default nextConfig;
