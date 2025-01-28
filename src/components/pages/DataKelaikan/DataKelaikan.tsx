@@ -3,9 +3,8 @@ import CardDataKelaikan from "./CardDataKelaikan";
 import Notifikasi from "@/components/commons/Notifikasi";
 import { IconChevronRight } from "@tabler/icons-react";
 import Bottomsheet from "@/components/commons/Bottomsheet";
-import { decrypt } from "@/utils/encrypt";
 import { defaultData } from "@/constants/vehicle";
-import { TEncResponseData, TResponseData } from "@/definitions/vehicle";
+import { TResponseData } from "@/definitions/vehicle";
 import { AxiosError } from "axios";
 import { fetchDataKendaraan } from "@/hooks/fetch";
 import { useRouter } from "next/router";
@@ -24,7 +23,9 @@ export default function DataKelaikan() {
     error: "",
   });
 
-  const fetchData = async (no_reg_kendaraan: string | string[]): Promise<TEncResponseData> => {
+  const fetchData = async (
+    no_reg_kendaraan: string | string[],
+  ): Promise<TResponseData> => {
     setIsFetching(true);
 
     const responseData = await fetchDataKendaraan(no_reg_kendaraan);
@@ -42,13 +43,11 @@ export default function DataKelaikan() {
       setVehicleNumber(`${vehicleCity} ${vehicleNumber} ${vehicleCode}`);
 
       fetchData(no_reg_vehicle)
-        .then((response: TEncResponseData) => {
-          const decryptData = decrypt(response.data);
-          
+        .then((response: TResponseData) => {
           setDataKendaraan({
             success: response.success,
             message: response.message,
-            data: decryptData,
+            data: response.data,
             error: response.error,
           });
         })
@@ -79,7 +78,7 @@ export default function DataKelaikan() {
       window.localStorage.removeItem("vehicleNumber");
       window.localStorage.removeItem("vehicleCode");
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
