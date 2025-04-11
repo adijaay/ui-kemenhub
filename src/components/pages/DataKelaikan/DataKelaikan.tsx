@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import CardDataKelaikan from "./CardDataKelaikan";
 import Notifikasi from "@/components/commons/Notifikasi";
-import { IconChevronRight } from "@tabler/icons-react";
+import { IconChevronRight, IconHeadset } from "@tabler/icons-react";
 import Bottomsheet from "@/components/commons/Bottomsheet";
 import { defaultData } from "@/constants/vehicle";
 import { TResponseData } from "@/definitions/vehicle";
 import { AxiosError } from "axios";
 import { fetchDataKendaraan } from "@/hooks/fetch";
 import { useRouter } from "next/router";
+import Button from "@/components/ui/Button";
 
 export default function DataKelaikan() {
   const router = useRouter();
@@ -81,6 +82,10 @@ export default function DataKelaikan() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const submitHandler = () => {
+    router.push("/chatbot?name=kelaiakan-kendaraan");
+  };
+
   return (
     <>
       {!isFetching ? (
@@ -114,6 +119,23 @@ export default function DataKelaikan() {
         error={dataKendaraan.error}
         isLoading={isFetching}
       />
+
+      <Button
+              data-testid="cekKelaikan"
+              text={<IconHeadset size={20} strokeWidth={1.5} />}
+              onClick={submitHandler}
+              style={{
+                position: "fixed",
+                bottom: "16px",
+                right: "16px",
+                zIndex: 10,
+                width: "56px",
+                height: "56px",
+                borderRadius: "50%",
+                backgroundColor: "#2871FF",
+                boxShadow: "0 4px 20px 0 #00000026",
+              }}
+            />
 
       <Bottomsheet
         isShow={showBottomSheet}
