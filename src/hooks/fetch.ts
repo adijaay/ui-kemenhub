@@ -12,6 +12,8 @@ export const fetchDataKendaraan = async (
     no_reg_kendaraan,
   };
 
+  console.log("token", token);
+
   const response: AxiosResponse = await fetchApi.post(
     "/v1/layak-jalan",
     formBody,

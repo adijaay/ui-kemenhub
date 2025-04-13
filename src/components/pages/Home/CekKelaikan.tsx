@@ -14,19 +14,19 @@ export default function CekKelaikan() {
   const router = useRouter();
 
   const [vehicleCity, setVehicleCity] = useState({
-    data: "",
+    data: "Z",
     error: false,
     errorDesc: "",
   });
 
   const [vehicleNumber, setVehicleNumber] = useState({
-    data: "",
+    data: "7517",
     error: false,
     errorDesc: "",
   });
 
   const [vehicleCode, setVehicleCode] = useState({
-    data: "",
+    data: "AA",
     error: false,
     errorDesc: "",
   });
@@ -172,6 +172,7 @@ export default function CekKelaikan() {
                 "ArrowLeft",
                 "ArrowRight",
                 "Delete",
+                "Tab"
               ].includes(e.key);
               if (!isNumeric.test(e.key) && !isControlKey) {
                 e.preventDefault();

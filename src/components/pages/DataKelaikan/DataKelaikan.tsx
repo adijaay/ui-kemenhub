@@ -9,12 +9,14 @@ import { AxiosError } from "axios";
 import { fetchDataKendaraan } from "@/hooks/fetch";
 import { useRouter } from "next/router";
 import Button from "@/components/ui/Button";
+import ChatbotBase from "../Chatbot/ChatbotBase";
 
 export default function DataKelaikan() {
   const router = useRouter();
 
   const [vehicleNumber, setVehicleNumber] = useState<string>("");
   const [showBottomSheet, setShowBottomSheet] = useState<boolean>(false);
+  const [showChatBot, setShowChatBot] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
   const [dataKendaraan, setDataKendaraan] = useState<TResponseData>({
@@ -51,6 +53,9 @@ export default function DataKelaikan() {
             data: response.data,
             error: response.error,
           });
+          if(response.data && response.data.data_blue.blue_id == null && response.data.data_spionam.spionam_id == null) {
+            router.push("/500");
+          }
         })
         .catch((err: AxiosError | unknown) => {
           if (err instanceof AxiosError) {
@@ -62,10 +67,8 @@ export default function DataKelaikan() {
                 router.push("/500");
                 return;
               case 404:
-                setDataKendaraan({
-                  ...dataKendaraan,
-                  success: false,
-                });
+                router.push("/500");
+                return;
             }
           }
         })
@@ -81,10 +84,6 @@ export default function DataKelaikan() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const submitHandler = () => {
-    router.push("/chatbot?name=kelaiakan-kendaraan");
-  };
 
   return (
     <>
@@ -123,7 +122,7 @@ export default function DataKelaikan() {
       <Button
               data-testid="cekKelaikan"
               text={<IconHeadset size={20} strokeWidth={1.5} />}
-              onClick={submitHandler}
+              onClick={() => setShowChatBot(true)}
               style={{
                 position: "fixed",
                 bottom: "16px",
@@ -136,6 +135,7 @@ export default function DataKelaikan() {
                 boxShadow: "0 4px 20px 0 #00000026",
               }}
             />
+            
 
       <Bottomsheet
         isShow={showBottomSheet}
@@ -158,6 +158,18 @@ export default function DataKelaikan() {
           </p>
         </div>
       </Bottomsheet>
+
+      {!isFetching && 
+       <Bottomsheet
+        isShow={showChatBot}
+        setShow={setShowChatBot}
+        title="GebrINA"
+      >
+        <div className="mt-4 flex w-full flex-col gap-4 overflow-auto max-h-[80vh]" id="bodychat">
+          <ChatbotBase vehicleNumber={vehicleNumber} dataKendaraan={dataKendaraan}/>
+        </div>
+      </Bottomsheet>
+      }
     </>
   );
 }
